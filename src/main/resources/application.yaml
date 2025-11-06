@@ -1,0 +1,3 @@
+spring:
+  application:
+    name: nhn-academy-spring-boot-jpa
