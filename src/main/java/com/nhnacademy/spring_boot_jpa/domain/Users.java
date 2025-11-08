@@ -12,8 +12,6 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 public class Users {
-
-
     @Id
     private Integer user_id;
     private String password;
