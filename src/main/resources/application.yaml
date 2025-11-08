@@ -17,7 +17,9 @@ spring:
 api:
   account:
     url: http://localhost:8081  # 팀원이 만든 Account API 주소
-  task:
+
+task:
+  api:
     url: http://localhost:8082
 
 
