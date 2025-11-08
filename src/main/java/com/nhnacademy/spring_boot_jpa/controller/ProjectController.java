@@ -1,59 +1,78 @@
 package com.nhnacademy.spring_boot_jpa.controller;
 
+import com.nhnacademy.spring_boot_jpa.dto.ProjectDetailsResponse;
+import com.nhnacademy.spring_boot_jpa.dto.ProjectResponse;
+import com.nhnacademy.spring_boot_jpa.dto.TaskCreateRequest;
+import com.nhnacademy.spring_boot_jpa.dto.account.UserPrincipal;
+import com.nhnacademy.spring_boot_jpa.service.TaskApiClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
-import java.util.Map; // 또는 ProjectDto
 
 @Slf4j
 @Controller
 @RequiredArgsConstructor
 public class ProjectController {
 
-    private final RestTemplate restTemplate;
+    //    private final RestTemplate restTemplate;
+    private final TaskApiClient taskApiClient;
 
-    // application.yaml 또는 properties에 Task-Api 주소 설정 필요
-    @Value("${api.task.url}")
-    private String taskApiUrl;
-
-    /**
-     * 4단계: 프로젝트 목록 화면
-     */
+    // 4단계: 프로젝트 목록 화면 (인증 적용)
     @GetMapping("/projectList")
-    public String showProjectList(Model model) {
+    public String showProjectList(@AuthenticationPrincipal UserPrincipal user,
+                                  Model model) {
 
-        // Task-Api의 프로젝트 목록 엔드포인트 (예: http://localhost:8082/projects)
-        String url = taskApiUrl + "/projects";
-        log.info("Fetching project list from: {}", url);
+        long memberId = user.getId();
+        log.info("request /projectList by member: {}", memberId);
 
         try {
-            // 4단계: RestTemplate으로 Task-Api 호출
-            // Task-Api가 List<ProjectDto> 형태를 반환한다고 가정
-            // 여기서는 List<Map<String, Object>>로 받습니다. (ProjectDto로 대체 권장)
-            ParameterizedTypeReference<List<Map<String, Object>>> responseType =
-                    new ParameterizedTypeReference<>() {};
+            List<ProjectResponse> projects = taskApiClient.getMyProjects(memberId);
+            model.addAttribute("projects", projects);
 
-            ResponseEntity<List<Map<String, Object>>> response =
-                    restTemplate.exchange(url, HttpMethod.GET, null, responseType);
-
-            model.addAttribute("projects", response.getBody());
-
-            return "projectList"; // templates/projectList.html (Thymeleaf 뷰)
+            return "projectList";
 
         } catch (Exception e) {
             log.error("Could not load projects from API", e);
             model.addAttribute("error", "프로젝트 목록을 불러오는 데 실패했습니다.");
             return "projectList"; // 에러가 있어도 페이지는 보여줌
         }
+    }
+
+
+    // 프로젝트 상세 페이지
+    @GetMapping("/projects/{projectId}")
+    public String showProjectDetails(@PathVariable long projectId,
+                                     @AuthenticationPrincipal UserPrincipal user,
+                                     Model model) {
+        long memberId = user.getId();
+        log.info("request /projects/{} by members: {}", projectId, memberId);
+
+        try {
+            ProjectDetailsResponse projectDetails = taskApiClient.getProjectDetails(memberId, projectId);
+            model.addAttribute("project", projectDetails);
+
+            return "projectDetails";
+        } catch (Exception e) {
+            log.error("Could not load project details for member: {}", memberId, e);
+            return "redirect:/projectList?error=details_failed";
+        }
+    }
+
+
+    // 태스크 생성 폼 페이지
+    @GetMapping("/projects/{projectId}/tasks/new")
+    public String showCreateTaskForm(@PathVariable long projectId,
+                                     Model model) {
+        model.addAttribute("taskCreateRequest", new TaskCreateRequest());
+        model.addAttribute("projectId", projectId);
+
+        return "taskForm";
     }
 
     // 루트(/) 요청 시 프로젝트 목록으로 리다이렉트
