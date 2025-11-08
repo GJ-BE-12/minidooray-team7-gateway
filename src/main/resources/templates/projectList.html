@@ -17,6 +17,8 @@
         th { background-color: #f4f4f4; color: #555; }
         tbody tr:hover { background-color: #f1f1f1; }
         .empty-list { text-align: center; color: #777; padding: 2rem; }
+        .project-link { color: #007bff; text-decoration: none; }
+        .project-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -46,9 +48,13 @@
             </thead>
             <tbody>
             <tr th:each="project : ${projects}">
-                <td th:text="${project['projectId']}">1</td>
-                <td th:text="${project['projectName']}">샘플 프로젝트</td>
-                <td th:text="${project['projectStatus']}">활성</td>
+                <td th:text="${project.projectId}">1</td>
+                <td>
+                    <a th:href="@{/projects/{id}(id=${project.projectId})}"
+                       th:text="${project.projectName}"
+                       class="project-link">샘플 프로젝트</a>
+                </td>
+                <td th:text="${project.projectStatus}">활성</td>
             </tr>
 
             <tr th:if="${#lists.isEmpty(projects)}">

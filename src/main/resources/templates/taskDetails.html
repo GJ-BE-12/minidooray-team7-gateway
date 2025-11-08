@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>태스크 상세</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f9f9f9; margin: 0; padding: 2rem; }
+        .container { max-width: 900px; margin: 0 auto; background: #fff; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); padding: 2rem; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 1rem; margin-bottom: 1.5rem; }
+        .header h1 { margin: 0; color: #333; font-size: 1.5rem; }
+        .back-link { color: #007bff; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .task-content { margin-top: 1.5rem; padding: 1rem; background-color: #fafafa; border-radius: 4px; border: 1px solid #eee; min-height: 100px; white-space: pre-wrap; }
+        .task-meta { color: #555; }
+
+        /* (신규) 댓글 섹션 스타일 */
+        .comments-section { margin-top: 2rem; padding-top: 1.5rem; border-top: 2px solid #eee; }
+        .comments-list { list-style-type: none; padding: 0; }
+        .comment-item { padding: 1rem; border-bottom: 1px solid #eee; }
+        .comment-item:last-child { border-bottom: none; }
+        .comment-author { font-weight: bold; color: #333; margin-bottom: 0.25rem; }
+        .comment-content { color: #555; }
+        .no-comments { color: #777; }
+
+        /* (신규) 폼 스타일 */
+        .form-section { margin-top: 1.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; color: #555; }
+        .form-group textarea { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button[type="submit"] { padding: 0.75rem 1.5rem; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
+        button[type="submit"]:hover { background-color: #0056b3; }
+        .alert-danger { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header" th:object="${task}">
+        <h1 th:text="*{title}">태스크 제목</h1>
+        <a th:href="@{/projects/{id}(id=*{projectId})}" class="back-link">프로젝트로 돌아가기</a>
+    </div>
+
+    <div th:object="${task}">
+        <p class="task-meta">
+            <strong>ID:</strong> <span th:text="*{taskId}"></span> |
+            <strong>작성자:</strong> <span th:text="*{authorName ?: 'N/A'}"></span>
+        </p>
+
+        <h2>내용</h2>
+        <div class="task-content" th:text="*{content}">
+            태스크 상세 내용이 여기에 표시됩니다.
+        </div>
+    </div>
+
+    <div class="comments-section">
+        <h2>댓글</h2>
+
+        <ul class="comments-list" th:object="${task}">
+            <li th:each="comment : *{comments}" class="comment-item">
+                <div class="comment-author" th:text="${comment.authorName ?: '익명'}">작성자</div>
+                <div class="comment-content" th:text="${comment.content}">댓글 내용입니다.</div>
+            </li>
+            <li th:if="${#lists.isEmpty(task.comments)}" class="no-comments">
+                등록된 댓글이 없습니다.
+            </li>
+        </ul>
+
+        <div class="form-section">
+            <h3>댓글 작성</h3>
+
+            <div th:if="${param.error == 'comment_failed'}" class="alert alert-danger">
+                댓글 등록에 실패했습니다. (내용을 입력했는지 확인하세요)
+            </div>
+
+            <form th:action="@{/tasks/{id}/comments(id=${task.taskId})}"
+                  th:object="${commentCreateRequest}"
+                  method="post">
+
+                <div class="form-group">
+                    <label for="content">댓글 내용:</label>
+                    <textarea id="content" th:field="*{content}" rows="3" required></textarea>
+                </div>
+                <button type="submit">댓글 등록</button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
