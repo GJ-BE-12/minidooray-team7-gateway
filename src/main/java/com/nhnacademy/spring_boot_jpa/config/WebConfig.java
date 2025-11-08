@@ -36,7 +36,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new SessionCheckInterceptor())
                 .addPathPatterns("/**") // 모든 요청에 대해 확인
-                .excludePathPatterns("/login", "/register", "/css/**", "/js/**", "/images/**"); // 예외 경로
+                .excludePathPatterns("/users/login", "/users/register", "/css/**", "/js/**", "/images/**"); // 예외 경로
     }
 
     /**
@@ -45,8 +45,10 @@ public class WebConfig implements WebMvcConfigurer {
      */
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/login").setViewName("login");
-        registry.addViewController("/register").setViewName("register");
+        registry.addViewController("/users/login/**").setViewName("login");
+        registry.addViewController("/users/register/**").setViewName("register");
+        registry.addViewController("/users/login").setViewName("login");
+        registry.addViewController("/users/register").setViewName("register");
     }
 
 }

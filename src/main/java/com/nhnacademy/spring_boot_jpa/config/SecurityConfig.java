@@ -1,38 +1,68 @@
 package com.nhnacademy.spring_boot_jpa.config;
 
+import com.nhnacademy.spring_boot_jpa.service.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final CustomUserFilter customUserFilter; // Account API 로그인 검증용 필터
+    private final CustomUserDetailsService customUserDetailsService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // CSRF 비활성화
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/css/**").permitAll() // 로그인 전 접근 허용
+                        .requestMatchers("/css/**", "/js/**").permitAll()
+                        .requestMatchers("/users/login", "/users/register", "/users/{username}/auth").permitAll()
                         .anyRequest().authenticated()
                 )
-                // 기존 formLogin 제거 — Account API를 통해 인증하므로 필요 없음
-                .addFilterBefore(customUserFilter, UsernamePasswordAuthenticationFilter.class) // 커스텀 로그인 필터 추가
+                .formLogin(form -> form
+                        .loginPage("/users/login") // 로그인 폼 GET URL
+                        .loginProcessingUrl("/users/login") // 로그인 폼 POST URL (Security가 처리)
+                        .defaultSuccessUrl("/projects", true)
+                        .permitAll()
+                )
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login")
+                        .logoutUrl("/users/logout")
+                        .logoutSuccessUrl("/users/login?logout")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 );
 
         return http.build();
+    }
+
+    /**
+     * 비밀번호 암호화기 (BCrypt)
+     * Account-Api는 회원가입 시 반드시 이 방식과 동일하게 암호화해야 합니다.
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * 인증 공급자(AuthenticationProvider) 설정
+     * Spring Security가 5번의 CustomUserDetailsService를 사용하도록 연결합니다.
+     */
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(customUserDetailsService); // 5번 서비스 설정
+        provider.setPasswordEncoder(passwordEncoder()); // 암호화기 설정
+        return provider;
     }
 }

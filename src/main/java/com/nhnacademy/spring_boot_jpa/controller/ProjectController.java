@@ -20,11 +20,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProjectController {
 
-    //    private final RestTemplate restTemplate;
     private final TaskApiClient taskApiClient;
 
-    // 4단계: 프로젝트 목록 화면 (인증 적용)
-    @GetMapping("/projectList")
+    // 프로젝트 목록 화면 (인증 적용)
+    @GetMapping("/projects")
     public String showProjectList(@AuthenticationPrincipal UserPrincipal user,
                                   Model model) {
 
@@ -78,6 +77,6 @@ public class ProjectController {
     // 루트(/) 요청 시 프로젝트 목록으로 리다이렉트
     @GetMapping("/")
     public String redirectToProjectList() {
-        return "redirect:/projectList";
+        return "redirect:/projects";
     }
 }
