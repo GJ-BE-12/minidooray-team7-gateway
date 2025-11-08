@@ -1,18 +1,18 @@
 spring:
   application:
     name: nhn-academy-spring-boot-jpa
+  session:
+    store-type: redis
   data:
     redis:
       host: localhost
       port: 6379
-      # password: (필요시)
-  session:
-    store-type: redis
 
 
-api:
-  account:
-    url: http://localhost:8081
+
+account:
+  api:
+    url: http://localhost:8081  # 팀원이 만든 Account API 주소
   task:
     url: http://localhost:8082
 
