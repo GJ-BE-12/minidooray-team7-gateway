@@ -1,4 +1,3 @@
-// src/main/java/com/nhnacademy/spring_boot_jpa/service/TaskApiClient.java
 package com.nhnacademy.spring_boot_jpa.service;
 
 import com.nhnacademy.spring_boot_jpa.dto.CommentCreateRequest;
@@ -43,8 +42,8 @@ public class TaskApiClient {
         return headers;
     }
 
-     // (로그인한 사용자) 프로젝트 목록을 조회
-     // Task-Api: GET /projects
+    // (로그인한 사용자) 프로젝트 목록을 조회
+    // Task-Api: GET /projects
     public List<ProjectResponse> getMyProjects(Long memberId) {
         String url = taskApiUrl + "/projects";
         log.info("[TaskApiClient] getMyProjects: {} (User: {})", url, memberId);
@@ -62,7 +61,7 @@ public class TaskApiClient {
         return response.getBody();
     }
 
-     // (로그인한 사용자) 프로젝트 상세 정보를 조회 (태스크 목록 포함)
+    // (로그인한 사용자) 프로젝트 상세 정보를 조회 (태스크 목록 포함)
     public ProjectDetailsResponse getProjectDetails(Long memberId, Long projectId) {
         String url = taskApiUrl + "/projects/" + projectId;
         log.info("[TaskApiClient] getProjectDetails: {} (User: {})", url, memberId);
@@ -76,7 +75,7 @@ public class TaskApiClient {
         return response.getBody();
     }
 
-     // (로그인한 사용자) 태스크 상세 정보를 조회합니다. (댓글 목록 포함)
+    // (로그인한 사용자) 태스크 상세 정보를 조회합니다. (댓글 목록 포함)
     public TaskDetailsResponse getTaskDetails(Long memberId, Long taskId) {
         String url = taskApiUrl + "/tasks/" + taskId;
         log.info("[TaskApiClient] getTaskDetails: {} (User: {})", url, memberId);
@@ -90,7 +89,7 @@ public class TaskApiClient {
         return response.getBody();
     }
 
-     // (로그인한 사용자) 태스크를 생성합니다.
+    // (로그인한 사용자) 태스크를 생성합니다.
     public void createTask(Long memberId, Long projectId, TaskCreateRequest request) {
         String url = taskApiUrl + "/projects/" + projectId + "/tasks";
         log.info("[TaskApiClient] createTask: {} (User: {})", url, memberId);
@@ -102,7 +101,7 @@ public class TaskApiClient {
         restTemplate.postForObject(url, entity, Void.class);
     }
 
-     // (로그인한 사용자) 댓글을 생성
+    // (로그인한 사용자) 댓글을 생성
     public void createComment(Long memberId, Long taskId, CommentCreateRequest request) {
         String url = taskApiUrl + "/tasks/" + taskId + "/comments";
         log.info("[TaskApiClient] createComment: {} (User: {})", url, memberId);
