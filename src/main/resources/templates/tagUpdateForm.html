@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>태그 수정</title>
+</head>
+<body>
+<div class="container">
+    <h1>태그 수정</h1>
+    <form th:action="@{/projects/{projectId}/tags/{tagId}/update(projectId=${projectId}, tagId=${tagId})}"
+          th:object="${tagUpdateRequest}" method="post">
+        <input type="text" th:field="*{tagName}" placeholder="새 태그명" required>
+        <button type="submit">태그 수정</button>
+    </form>
+    <a th:href="@{/projects/{id}/tags(id=${projectId})}" class="back-link">태그 목록으로 돌아가기</a>
+</div>
+</body>
+</html>

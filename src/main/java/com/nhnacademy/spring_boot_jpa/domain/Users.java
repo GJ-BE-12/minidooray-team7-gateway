@@ -1,7 +1,7 @@
 package com.nhnacademy.spring_boot_jpa.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+//import jakarta.persistence.Entity;
+//import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,10 +10,10 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Entity
+//@Entity
 public class Users {
-    @Id
-    private Integer user_id;
+//    @Id
+    private String user_id;
     private String password;
     private String user_name;
     private String email;

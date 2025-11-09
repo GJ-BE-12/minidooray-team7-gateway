@@ -3,7 +3,8 @@ package com.nhnacademy.spring_boot_jpa.controller;
 import com.nhnacademy.spring_boot_jpa.dto.account.UserPrincipal;
 import com.nhnacademy.spring_boot_jpa.dto.tag.TagCreateRequest;
 import com.nhnacademy.spring_boot_jpa.dto.tag.TagResponse;
-import com.nhnacademy.spring_boot_jpa.service.TaskApiClient;
+import com.nhnacademy.spring_boot_jpa.dto.tag.TagUpdateRequest;
+import com.nhnacademy.spring_boot_jpa.service.taskapi.TagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,9 +20,9 @@ import java.util.List;
 @RequestMapping("/projects/{projectId}/tags")
 public class TagController {
 
-    private final TaskApiClient taskApiClient;
+//    private final TaskApiClient taskApiClient;
+    private final TagService tagService;
 
-    // 태그 관리 페이지 (목록 조회 및 생성 폼)
     // URL: GET /projects/{projectId}/tags
     @GetMapping
     public String showTagList(@PathVariable Long projectId,
@@ -29,18 +30,17 @@ public class TagController {
                               Model model) {
         Long memberId = user.getId();
         try {
-            List<TagResponse> tags = taskApiClient.getTags(memberId, projectId);
+            List<TagResponse> tags = tagService.getTags(memberId, projectId);
             model.addAttribute("tags", tags);
             model.addAttribute("projectId", projectId);
             model.addAttribute("tagCreateRequest", new TagCreateRequest());
-            return "tagList"; // (신규 템플릿) // todo: task목록과 task상세페이지에 같이 보이도록...
+            return "tagList";
         } catch (Exception e) {
             log.error("Failed to load tags", e);
-            return "redirect:/projects/" + projectId + "?error=tags_failed";
+            return "redirect:/projects/" + projectId + "?error=tags_show_failed";
         }
     }
 
-    // 태그 생성 처리
     // URL: POST /projects/{projectId}/tags
     @PostMapping
     public String createTag(@PathVariable Long projectId,
@@ -48,7 +48,7 @@ public class TagController {
                             @AuthenticationPrincipal UserPrincipal user) {
         Long memberId = user.getId();
         try {
-            taskApiClient.createTag(memberId, projectId, request);
+            tagService.createTag(memberId, projectId, request);
             return "redirect:/projects/" + projectId + "/tags";
         } catch (Exception e) {
             log.error("Failed to create tag", e);
@@ -56,15 +56,42 @@ public class TagController {
         }
     }
 
-    // 태그 삭제 처리
-    // URL: GET /projects/{projectId}/tags/{tags}
-    @DeleteMapping("/{tagId}")
+    // URL: POST /projects/{projectId}/tags/{tagsId}/edit
+    @GetMapping("/{tagId}/edit")
+    public String showUpdateTagForm(@PathVariable Long projectId,
+                                    @PathVariable Long tagId,
+                                    Model model) {
+        // (단순화) 기존 이름을 알 수 없으므로 빈 폼 제공
+        // (개선) getTagDetails API가 있다면 기존 정보 조회
+        model.addAttribute("tagUpdateRequest", new TagUpdateRequest());
+        model.addAttribute("projectId", projectId);
+        model.addAttribute("tagId", tagId);
+        return "tagUpdateForm"; // 템플릿 (4번 항목 참고)
+    }
+
+    // URL: POST /projects/{projectId}/tags/{tagsId}/update
+    @PostMapping("/{tagId}/update")
+    public String updateTag(@PathVariable Long projectId,
+                            @PathVariable Long tagId,
+                            @ModelAttribute TagUpdateRequest request,
+                            @AuthenticationPrincipal UserPrincipal user) {
+        try {
+            tagService.updateTag(user.getId(), projectId, tagId, request);
+            return "redirect:/projects/" + projectId + "/tags";
+        } catch (Exception e) {
+            log.error("Failed to update tag", e);
+            return "redirect:/projects/" + projectId + "/tags/" + tagId + "/edit?error=true";
+        }
+    }
+
+    // URL: GET /projects/{projectId}/tags/{tags}/delete
+    @PostMapping("/{tagId}/delete")
     public String deleteTag(@PathVariable Long projectId,
                             @PathVariable Long tagId,
                             @AuthenticationPrincipal UserPrincipal user) {
         Long memberId = user.getId();
         try {
-            taskApiClient.deleteTag(memberId, projectId, tagId);
+            tagService.deleteTag(memberId, projectId, tagId);
             return "redirect:/projects/" + projectId + "/tags";
         } catch (Exception e) {
             log.error("Failed to delete tag", e);

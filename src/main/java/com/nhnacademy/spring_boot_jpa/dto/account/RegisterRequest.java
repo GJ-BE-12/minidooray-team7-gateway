@@ -6,7 +6,8 @@ import lombok.Data;
 //회원가입 요청
 @Data
 public class RegisterRequest {
-    private String username; // = id
+    private String userId;
+    private String username;
     private String password;
     private String email;
 }

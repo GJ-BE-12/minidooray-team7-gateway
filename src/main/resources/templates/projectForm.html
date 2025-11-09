@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${isUpdate != null ? '프로젝트 수정' : '새 프로젝트 생성'}">프로젝트 폼</title>
+</head>
+<body>
+<div class="container">
+    <h1 th:text="${isUpdate != null ? '프로젝트 수정' : '새 프로젝트 생성'}">프로젝트 폼</h1>
+
+    <form th:if="${isUpdate == null}" th:action="@{/projects}" th:object="${projectCreateRequest}" method="post">
+        <div class="form-group">
+            <label for="projectName">프로젝트 이름:</label>
+            <input type="text" id="projectName" th:field="*{projectName}" required>
+        </div>
+        <button type="submit">프로젝트 생성</button>
+    </form>
+
+    <form th:if="${isUpdate != null}" th:action="@{/projects/{id}/update(id=${projectId})}" th:object="${projectUpdateRequest}" method="post">
+        <div class="form-group">
+            <label for="updateProjectName">프로젝트 이름:</label>
+            <input type="text" id="updateProjectName" th:field="*{projectName}" required>
+        </div>
+        <div class="form-group">
+            <label for="projectStatus">프로젝트 상태:</label>
+            <select id="projectStatus" th:field="*{projectStatus}">
+                <option value="활성">활성</option>
+                <option value="휴면">휴면</option>
+                <option value="종료">종료</option>
+            </select>
+        </div>
+        <button type="submit">프로젝트 수정</button>
+    </form>
+
+    <a th:href="@{/projects}" class="back-link">목록으로 돌아가기</a>
+</div>
+</body>
+</html>

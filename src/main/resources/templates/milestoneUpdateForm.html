@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>마일스톤 수정</title>
+</head>
+<body>
+<div class="container">
+    <h1>마일스톤 수정</h1>
+    <form th:action="@{/projects/{projectId}/milestones/{msId}/update(projectId=${projectId}, msId=${milestoneId})}"
+          th:object="${milestoneUpdateRequest}" method="post">
+        <input type="text" th:field="*{milestoneName}" placeholder="새 마일스톤명" required>
+        <button type="submit">마일스톤 수정</button>
+    </form>
+    <a th:href="@{/projects/{id}/milestones(id=${projectId})}" class="back-link">마일스톤 목록으로 돌아가기</a>
+</div>
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>프로젝트 멤버 관리</title>
+</head>
+<body>
+<div class="container">
+    <h1>멤버 관리</h1>
+    <a th:href="@{/projects/{id}(id=${projectId})}" class="back-link">프로젝트로 돌아가기</a>
+
+    <table>
+        <thead>
+        <tr> <th>ID</th> <th>Username</th> <th>Email</th> <th>삭제</th> </tr>
+        </thead>
+        <tbody>
+        <tr th:each="member : ${members}">
+            <td th:text="${member.memberId}">1</td>
+            <td th:text="${member.username}">member1</td>
+            <td th:text="${member.email}">member1@dooray.com</td>
+            <td>
+                <form th:action="@{/projects/{projectId}/members/{memberId}/delete(projectId=${projectId}, memberId=${member.memberId})}" method="post">
+                    <button type="submit" class="delete-button">삭제</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="form-section">
+        <h2>새 멤버 추가 (ID로 검색)</h2>
+        <form th:action="@{/projects/{id}/members(id=${projectId})}" method="post">
+            <input type="text" name="username" placeholder="추가할 멤버 ID" required>
+            <button type="submit">멤버 추가</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

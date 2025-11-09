@@ -67,6 +67,13 @@
     <div class="comments-section">
         <h2>댓글</h2>
         <ul class="comments-list" th:object="${task}">
+            <li th:each="comment : *{comments}" class="comment-item">
+                <div class="comment-author" th:text="${comment.authorName}">댓글 작성자</div>
+                <div class="comment-content" th:text="${comment.content}">댓글 내용</div>
+            </li>
+            <li th:if="${#lists.isEmpty(task.comments)}" class="no-comments">
+                작성된 댓글이 없습니다.
+            </li>
         </ul>
 
         <div class="form-section">

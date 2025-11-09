@@ -1,0 +1,22 @@
+### register
+POST localhost:8080/users/register
+Content-Type: application/json
+
+{
+  "userId" : "admin",
+  "username" : "어드민",
+  "email" : "admin@naver.com",
+  "password" : "admin"
+}
+
+### login
+POST localhost:8080/users/login
+Content-Type: application/json
+
+{
+  "username" : "admin",
+  "password" : "admin"
+}
+
+### /projects/{projectId}
+GET http://172.24.101.208:8082/projects/1

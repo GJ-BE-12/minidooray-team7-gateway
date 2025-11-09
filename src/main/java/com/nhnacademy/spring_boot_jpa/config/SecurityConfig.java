@@ -45,19 +45,11 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /**
-     * 비밀번호 암호화기 (BCrypt)
-     * Account-Api는 회원가입 시 반드시 이 방식과 동일하게 암호화해야 합니다.
-     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * 인증 공급자(AuthenticationProvider) 설정
-     * Spring Security가 5번의 CustomUserDetailsService를 사용하도록 연결합니다.
-     */
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
