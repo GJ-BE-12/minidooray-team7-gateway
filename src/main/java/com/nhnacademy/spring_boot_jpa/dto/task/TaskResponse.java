@@ -1,4 +1,4 @@
-package com.nhnacademy.spring_boot_jpa.dto;
+package com.nhnacademy.spring_boot_jpa.dto.task;
 
 import lombok.Data;
 

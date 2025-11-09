@@ -1,4 +1,4 @@
-package com.nhnacademy.spring_boot_jpa.dto;
+package com.nhnacademy.spring_boot_jpa.dto.comment;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,5 +7,5 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CommentCreateRequest {
-    private String content; // 댓글 내용
+    private String content;
 }

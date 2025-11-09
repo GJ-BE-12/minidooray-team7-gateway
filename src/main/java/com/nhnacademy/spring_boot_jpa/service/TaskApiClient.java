@@ -1,10 +1,14 @@
 package com.nhnacademy.spring_boot_jpa.service;
 
-import com.nhnacademy.spring_boot_jpa.dto.CommentCreateRequest;
-import com.nhnacademy.spring_boot_jpa.dto.ProjectDetailsResponse;
-import com.nhnacademy.spring_boot_jpa.dto.ProjectResponse;
-import com.nhnacademy.spring_boot_jpa.dto.TaskCreateRequest;
-import com.nhnacademy.spring_boot_jpa.dto.TaskDetailsResponse;
+import com.nhnacademy.spring_boot_jpa.dto.comment.CommentCreateRequest;
+import com.nhnacademy.spring_boot_jpa.dto.milestone.MilestoneCreateRequest;
+import com.nhnacademy.spring_boot_jpa.dto.milestone.MilestoneResponse;
+import com.nhnacademy.spring_boot_jpa.dto.project.ProjectDetailsResponse;
+import com.nhnacademy.spring_boot_jpa.dto.project.ProjectResponse;
+import com.nhnacademy.spring_boot_jpa.dto.tag.TagCreateRequest;
+import com.nhnacademy.spring_boot_jpa.dto.tag.TagResponse;
+import com.nhnacademy.spring_boot_jpa.dto.task.TaskCreateRequest;
+import com.nhnacademy.spring_boot_jpa.dto.task.TaskDetailsResponse;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,9 +35,7 @@ public class TaskApiClient {
     private String taskApiUrl;
 
     /**
-     * (핵심) Task-Api로 보낼 인증 헤더를 생성합니다.
-     * @param memberId 1단계에서 정의한 UserPrincipal에서 가져온 로그인 사용자 ID
-     * @return HttpHeaders 객체
+     * Task-Api로 보낼 인증 헤더를 생성합니다.
      */
     private HttpHeaders createAuthHeaders(Long memberId) {
         HttpHeaders headers = new HttpHeaders();
@@ -112,4 +114,80 @@ public class TaskApiClient {
         restTemplate.postForObject(url, entity, Void.class);
     }
 
+    // 프로젝트의 태그 목록 조회
+    public List<TagResponse> getTags(Long memberId, Long projectId) {
+        String url = taskApiUrl + "/projects/" + projectId + "/tags";
+        log.info("[TaskApiClient] getTags: {} (User: {})", url, memberId);
+
+        HttpHeaders headers = createAuthHeaders(memberId);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ParameterizedTypeReference<List<TagResponse>> responseType = new ParameterizedTypeReference<>() {};
+        ResponseEntity<List<TagResponse>> response =
+                restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
+
+        return response.getBody();
+    }
+
+    // --- Tag API 호출 ---
+    // 태그 생성
+    public void createTag(Long memberId, Long projectId, TagCreateRequest request) {
+        String url = taskApiUrl + "/projects/" + projectId + "/tags";
+        log.info("[TaskApiClient] createTag: {} (User: {})", url, memberId);
+
+        HttpHeaders headers = createAuthHeaders(memberId);
+        HttpEntity<TagCreateRequest> entity = new HttpEntity<>(request, headers);
+
+        restTemplate.postForObject(url, entity, Void.class);
+    }
+
+    // 태그 삭제
+    public void deleteTag(Long memberId, Long projectId, Long tagId) {
+        String url = taskApiUrl + "/projects/" + projectId + "/tags/" + tagId;
+        log.info("[TaskApiClient] deleteTag: {} (User: {})", url, memberId);
+
+        HttpHeaders headers = createAuthHeaders(memberId);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class);
+    }
+
+
+    // --- Milestone API 호출 ---
+    // 프로젝트의 마일스톤 목록 조회
+    public List<MilestoneResponse> getMilestones(Long memberId, Long projectId) {
+        String url = taskApiUrl + "/projects/" + projectId + "/milestones";
+        log.info("[TaskApiClient] getMilestones: {} (User: {})", url, memberId);
+
+        HttpHeaders headers = createAuthHeaders(memberId);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        ParameterizedTypeReference<List<MilestoneResponse>> responseType = new ParameterizedTypeReference<>() {};
+        ResponseEntity<List<MilestoneResponse>> response =
+                restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
+
+        return response.getBody();
+    }
+
+    // 마일스톤 생성
+    public void createMilestone(Long memberId, Long projectId, MilestoneCreateRequest request) {
+        String url = taskApiUrl + "/projects/" + projectId + "/milestones";
+        log.info("[TaskApiClient] createMilestone: {} (User: {})", url, memberId);
+
+        HttpHeaders headers = createAuthHeaders(memberId);
+        HttpEntity<MilestoneCreateRequest> entity = new HttpEntity<>(request, headers);
+
+        restTemplate.postForObject(url, entity, Void.class);
+    }
+
+    // 마일스톤 삭제
+    public void deleteMilestone(Long memberId, Long projectId, Long milestoneId) {
+        String url = taskApiUrl + "/projects/" + projectId + "/milestones/" + milestoneId;
+        log.info("[TaskApiClient] deleteMilestone: {} (User: {})", url, memberId);
+
+        HttpHeaders headers = createAuthHeaders(memberId);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+
+        restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class);
+    }
 }

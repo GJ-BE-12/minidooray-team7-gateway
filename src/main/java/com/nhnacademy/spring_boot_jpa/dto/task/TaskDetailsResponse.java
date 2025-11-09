@@ -1,5 +1,8 @@
-package com.nhnacademy.spring_boot_jpa.dto;
+package com.nhnacademy.spring_boot_jpa.dto.task;
 
+import com.nhnacademy.spring_boot_jpa.dto.comment.CommentResponse;
+import com.nhnacademy.spring_boot_jpa.dto.milestone.MilestoneResponse;
+import com.nhnacademy.spring_boot_jpa.dto.tag.TagResponse;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,5 +19,7 @@ public class TaskDetailsResponse {
     private String authorName;
     private List<CommentResponse> comments;
 
-    // 마일스톤, 태그 등..
+    // (수정) 마일스톤 및 태그 정보 추가
+    private MilestoneResponse milestone;
+    private List<TagResponse> tags;
 }
