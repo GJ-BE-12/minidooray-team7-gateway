@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UserAuthResponse {
-    private Long memberId;
+    private String userId;
     private String username;
     private String password; // 암호화된 비밀번호
     private String email;

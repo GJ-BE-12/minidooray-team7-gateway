@@ -34,8 +34,8 @@ public class TaskController {
                                      @AuthenticationPrincipal UserPrincipal user) {
         model.addAttribute("taskCreateRequest", new TaskCreateRequest());
         model.addAttribute("projectId", projectId);
-        model.addAttribute("tags", tagService.getTags(user.getId(), projectId));
-        model.addAttribute("milestones", milestoneService.getMilestones(user.getId(), projectId));
+        model.addAttribute("tags", tagService.getTags(user.getUserId(), projectId));
+        model.addAttribute("milestones", milestoneService.getMilestones(user.getUserId(), projectId));
         return "taskForm";
     }
 
@@ -44,10 +44,10 @@ public class TaskController {
     public String createTask(@PathVariable Long projectId,
                              @ModelAttribute TaskCreateRequest request,
                              @AuthenticationPrincipal UserPrincipal user) {
-        Long memberId = user.getId();
+        String userId = user.getUserId();
 
         try {
-            taskService.createTask(memberId, projectId, request);
+            taskService.createTask(userId, projectId, request);
             return "redirect:/projects/" + projectId;
         } catch (Exception e) {
             log.error("Failed to create task", e);
@@ -61,17 +61,17 @@ public class TaskController {
                                   @PathVariable Long taskId,
                                   @AuthenticationPrincipal UserPrincipal user,
                                   Model model) {
-        Long memberId = user.getId();
+        String userId = user.getUserId();
 
         try {
-            TaskDetailsResponse taskDetails = taskService.getTaskDetails(memberId, taskId);
+            TaskDetailsResponse taskDetails = taskService.getTaskDetails(userId, taskId);
             model.addAttribute("task", taskDetails);
             model.addAttribute("commentCreateRequest", new CommentCreateRequest());
             model.addAttribute("projectId", projectId);
 
             return "taskDetails";
         } catch (Exception e) {
-            log.error("Could not load task details for member: {}", memberId, e);
+            log.error("Could not load task details for member: {}", userId, e);
             return "redirect:/projects/" + projectId + "?error=task_details_failed";
         }
     }
@@ -83,7 +83,7 @@ public class TaskController {
                                      @AuthenticationPrincipal UserPrincipal user,
                                      Model model) {
 
-        TaskDetailsResponse task = taskService.getTaskDetails(user.getId(), taskId);
+        TaskDetailsResponse task = taskService.getTaskDetails(user.getUserId(), taskId);
 
         // TaskDetailsResponse -> TaskUpdateRequest 변환
         TaskUpdateRequest request = new TaskUpdateRequest();
@@ -99,8 +99,8 @@ public class TaskController {
         model.addAttribute("taskId", taskId);
 
         // (보완) 태그, 마일스톤 목록을 불러와 모델에 추가해야 함
-        model.addAttribute("tags", tagService.getTags(user.getId(), projectId));
-        model.addAttribute("milestones", milestoneService.getMilestones(user.getId(), projectId));
+        model.addAttribute("tags", tagService.getTags(user.getUserId(), projectId));
+        model.addAttribute("milestones", milestoneService.getMilestones(user.getUserId(), projectId));
 
         return "taskUpdateForm"; // 템플릿 (4번 항목 참고)
     }
@@ -112,7 +112,7 @@ public class TaskController {
                              @ModelAttribute TaskUpdateRequest request,
                              @AuthenticationPrincipal UserPrincipal user) {
         try {
-            taskService.updateTask(user.getId(), taskId, request);
+            taskService.updateTask(user.getUserId(), taskId, request);
             return String.format("redirect:/projects/%d/tasks/%d", projectId, taskId);
         } catch (Exception e) {
             log.error("Failed to update task", e);
@@ -126,7 +126,7 @@ public class TaskController {
                              @PathVariable Long taskId,
                              @AuthenticationPrincipal UserPrincipal user) {
         try {
-            taskService.deleteTask(user.getId(), taskId);
+            taskService.deleteTask(user.getUserId(), taskId);
             return "redirect:/projects/" + projectId;
         } catch (Exception e) {
             log.error("Failed to delete task", e);

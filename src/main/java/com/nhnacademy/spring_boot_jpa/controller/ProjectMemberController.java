@@ -29,7 +29,7 @@ public class ProjectMemberController {
         log.info("project id: {}", projectId);
 
         try {
-            List<ProjectMemberResponse> members = projectService.getProjectMembers(user.getId(), projectId);
+            List<ProjectMemberResponse> members = projectService.getProjectMembers(user.getUserId(), projectId);
             model.addAttribute("members", members);
             model.addAttribute("projectId", projectId);
             return "projectMembers";
@@ -46,7 +46,7 @@ public class ProjectMemberController {
                                    @AuthenticationPrincipal UserPrincipal user) {
         try {
             // TaskApi는 username을 받아 AccountApi에 유저 존재 여부를 확인 후 추가해야 함
-            projectService.addProjectMember(user.getId(), projectId, username);
+            projectService.addProjectMember(user.getUserId(), projectId, username);
         } catch (Exception e) {
             log.error("Failed to add project member", e);
             return "redirect:/projects/" + projectId + "/members?error=member_add_failed";
@@ -60,7 +60,7 @@ public class ProjectMemberController {
                                       @PathVariable long memberId,
                                       @AuthenticationPrincipal UserPrincipal user) {
         try {
-            projectService.deleteProjectMember(user.getId(), projectId, memberId);
+            projectService.deleteProjectMember(user.getUserId(), projectId, memberId);
         } catch (Exception e) {
             log.error("Failed to delete project member", e);
             return "redirect:/projects/" + projectId + "/members?error=member_delete_failed";

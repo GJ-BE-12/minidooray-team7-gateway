@@ -28,9 +28,9 @@ public class MilestoneController {
     public String showMilestoneList(@PathVariable Long projectId,
                                     @AuthenticationPrincipal UserPrincipal user,
                                     Model model) {
-        Long memberId = user.getId();
+        String userId = user.getUserId();
         try {
-            List<MilestoneResponse> milestones = milestoneService.getMilestones(memberId, projectId);
+            List<MilestoneResponse> milestones = milestoneService.getMilestones(userId, projectId);
             model.addAttribute("milestones", milestones);
             model.addAttribute("projectId", projectId);
             model.addAttribute("milestoneCreateRequest", new MilestoneCreateRequest());
@@ -46,9 +46,9 @@ public class MilestoneController {
     public String createMilestone(@PathVariable Long projectId,
                                   @ModelAttribute MilestoneCreateRequest request,
                                   @AuthenticationPrincipal UserPrincipal user) {
-        Long memberId = user.getId();
+        String userId = user.getUserId();
         try {
-            milestoneService.createMilestone(memberId, projectId, request);
+            milestoneService.createMilestone(userId, projectId, request);
             return "redirect:/projects/" + projectId + "/milestones";
         } catch (Exception e) {
             log.error("Failed to create milestone", e);
@@ -74,7 +74,7 @@ public class MilestoneController {
                                   @ModelAttribute MilestoneUpdateRequest request,
                                   @AuthenticationPrincipal UserPrincipal user) {
         try {
-            milestoneService.updateMilestone(user.getId(), projectId, milestoneId, request);
+            milestoneService.updateMilestone(user.getUserId(), projectId, milestoneId, request);
             return "redirect:/projects/" + projectId + "/milestones";
         } catch (Exception e) {
             log.error("Failed to update milestone", e);
@@ -87,9 +87,9 @@ public class MilestoneController {
     public String deleteMilestone(@PathVariable Long projectId,
                                   @PathVariable Long milestoneId,
                                   @AuthenticationPrincipal UserPrincipal user) {
-        Long memberId = user.getId();
+        String userId = user.getUserId();
         try {
-            milestoneService.deleteMilestone(memberId, projectId, milestoneId);
+            milestoneService.deleteMilestone(userId, projectId, milestoneId);
             return "redirect:/projects/" + projectId + "/milestones";
         } catch (Exception e) {
             log.error("Failed to delete milestone", e);

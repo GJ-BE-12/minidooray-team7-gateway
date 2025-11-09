@@ -35,11 +35,11 @@ public class ProjectController {
     public String showProjectList(@AuthenticationPrincipal UserPrincipal user,
                                   Model model) {
 
-        long memberId = user.getId();
-        log.info("member id : {}", memberId);
+        String userId = user.getUserId();
+        log.info("member id : {}", userId);
 
         try {
-            List<ProjectResponse> projects = projectService.getMyProjects(memberId);
+            List<ProjectResponse> projects = projectService.getMyProjects(userId);
             model.addAttribute("projects", projects);
 
             return "projectList";
@@ -63,7 +63,7 @@ public class ProjectController {
     public String createProject(@ModelAttribute ProjectCreateRequest request,
                                 @AuthenticationPrincipal UserPrincipal user) {
         try {
-            projectService.createProject(user.getId(), request);
+            projectService.createProject(user.getUserId(), request);
             return "redirect:/projects";
         } catch (Exception e) {
             log.error("Failed to create project", e);
@@ -76,7 +76,7 @@ public class ProjectController {
     public String showUpdateProjectForm(@PathVariable long projectId,
                                         @AuthenticationPrincipal UserPrincipal user,
                                         Model model) {
-        ProjectDetailsResponse project = projectService.getProjectDetails(user.getId(), projectId);
+        ProjectDetailsResponse project = projectService.getProjectDetails(user.getUserId(), projectId);
 
         // ProjectDetailsResponse -> ProjectUpdateRequest 변환
         ProjectUpdateRequest request = new ProjectUpdateRequest();
@@ -96,7 +96,7 @@ public class ProjectController {
                                 @ModelAttribute ProjectUpdateRequest request,
                                 @AuthenticationPrincipal UserPrincipal user) {
         try {
-            projectService.updateProject(user.getId(), projectId, request);
+            projectService.updateProject(user.getUserId(), projectId, request);
             return "redirect:/projects/" + projectId;
         } catch (Exception e) {
             log.error("Failed to update project", e);
@@ -109,16 +109,16 @@ public class ProjectController {
     public String showProjectDetails(@PathVariable long projectId,
                                      @AuthenticationPrincipal UserPrincipal user,
                                      Model model) {
-        long memberId = user.getId();
-        log.info("request /projects/{} by members: {}", projectId, memberId);
+        String userId = user.getUserId();
+        log.info("request /projects/{} by members: {}", projectId, userId);
 
         try {
-            ProjectDetailsResponse projectDetails = projectService.getProjectDetails(memberId, projectId);
+            ProjectDetailsResponse projectDetails = projectService.getProjectDetails(userId, projectId);
             model.addAttribute("project", projectDetails);
 
             return "projectDetails";
         } catch (Exception e) {
-            log.error("Could not load project details for member: {}", memberId, e);
+            log.error("Could not load project details for member: {}", userId, e);
             return "redirect:/projects?error=project_details_failed";
         }
     }

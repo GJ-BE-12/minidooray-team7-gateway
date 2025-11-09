@@ -29,14 +29,14 @@ public class AccountApiClient {
      * CustomUserDetailsService가 Account-Api를 호출하기 위한 메소드
      * @return UserAuthResponse (memberId, 암호화된 pw, 권한 포함)
      */
-    public UserAuthResponse getUserAuthDetails(String username) {
+    public UserAuthResponse getUserAuthDetails(String userId) {
         // (중요) Account-Api에 이 엔드포인트(GET /users/{username}/auth)가 필요합니다.
-        String url = this.accountApiUrl + "/users/" + username + "/auth";
+        String url = this.accountApiUrl + "/users/" + userId;
         log.info("Fetching auth details from: {}", url);
         try {
             return restTemplate.getForObject(url, UserAuthResponse.class);
         } catch (Exception e) {
-            log.warn("Failed to fetch auth details for user: {}", username, e);
+            log.warn("Failed to fetch auth details for user: {}", userId, e);
             return null; // UserDetailsService가 null을 받아 처리하도록 함
         }
     }

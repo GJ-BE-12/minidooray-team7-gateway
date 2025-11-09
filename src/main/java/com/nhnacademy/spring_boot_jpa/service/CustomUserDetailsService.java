@@ -20,20 +20,20 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final AccountApiClient accountApiClient;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("Attempting to authenticate user: {}", username);
+    public UserDetails loadUserByUsername(String userId) throws UsernameNotFoundException {
+        log.info("Attempting to authenticate user: {}", userId);
 
-        UserAuthResponse userResponse = accountApiClient.getUserAuthDetails(username);
+        UserAuthResponse userResponse = accountApiClient.getUserAuthDetails(userId);
 
         if (userResponse == null || userResponse.getPassword() == null) {
-            log.warn("User not found or password null from API: {}", username);
-            throw new UsernameNotFoundException("User not found or invalid response: " + username);
+            log.warn("User not found or password null from API: {}", userId);
+            throw new UsernameNotFoundException("User not found or invalid response: " + userId);
         }
 
-        log.info("User found from API: {}. (MemberId: {})", username, userResponse.getMemberId());
+        log.info("User found from API: {}. (MemberId: {})", userId, userResponse.getUserId());
 
         return new UserPrincipal(
-                userResponse.getMemberId(),
+                userResponse.getUserId(),
                 userResponse.getUsername(),
                 userResponse.getPassword(), // API가 암호화된 비밀번호를 반환해야 함
                 userResponse.getEmail(),

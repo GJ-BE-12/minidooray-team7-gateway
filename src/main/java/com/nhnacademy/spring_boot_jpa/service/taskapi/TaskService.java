@@ -6,14 +6,14 @@ import com.nhnacademy.spring_boot_jpa.dto.task.TaskUpdateRequest;
 
 public interface TaskService {
     /** 태스크 상세 정보 조회 */
-    TaskDetailsResponse getTaskDetails(Long memberId, Long taskId);
+    TaskDetailsResponse getTaskDetails(String userId, Long taskId);
 
     /** 태스크 생성 */
-    void createTask(Long memberId, Long projectId, TaskCreateRequest request);
+    void createTask(String userId, Long projectId, TaskCreateRequest request);
 
     /** 태스크 수정 */
-    void updateTask(Long memberId, Long taskId, TaskUpdateRequest request);
+    void updateTask(String userId, Long taskId, TaskUpdateRequest request);
 
     /** 태스크 삭제 */
-    void deleteTask(Long memberId, Long taskId);
+    void deleteTask(String userId, Long taskId);
 }

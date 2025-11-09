@@ -28,9 +28,9 @@ public class TagController {
     public String showTagList(@PathVariable Long projectId,
                               @AuthenticationPrincipal UserPrincipal user,
                               Model model) {
-        Long memberId = user.getId();
+        String userId = user.getUserId();
         try {
-            List<TagResponse> tags = tagService.getTags(memberId, projectId);
+            List<TagResponse> tags = tagService.getTags(userId, projectId);
             model.addAttribute("tags", tags);
             model.addAttribute("projectId", projectId);
             model.addAttribute("tagCreateRequest", new TagCreateRequest());
@@ -46,9 +46,9 @@ public class TagController {
     public String createTag(@PathVariable Long projectId,
                             @ModelAttribute TagCreateRequest request,
                             @AuthenticationPrincipal UserPrincipal user) {
-        Long memberId = user.getId();
+        String userId = user.getUserId();
         try {
-            tagService.createTag(memberId, projectId, request);
+            tagService.createTag(userId, projectId, request);
             return "redirect:/projects/" + projectId + "/tags";
         } catch (Exception e) {
             log.error("Failed to create tag", e);
@@ -76,7 +76,7 @@ public class TagController {
                             @ModelAttribute TagUpdateRequest request,
                             @AuthenticationPrincipal UserPrincipal user) {
         try {
-            tagService.updateTag(user.getId(), projectId, tagId, request);
+            tagService.updateTag(user.getUserId(), projectId, tagId, request);
             return "redirect:/projects/" + projectId + "/tags";
         } catch (Exception e) {
             log.error("Failed to update tag", e);
@@ -89,9 +89,9 @@ public class TagController {
     public String deleteTag(@PathVariable Long projectId,
                             @PathVariable Long tagId,
                             @AuthenticationPrincipal UserPrincipal user) {
-        Long memberId = user.getId();
+        String userId = user.getUserId();
         try {
-            tagService.deleteTag(memberId, projectId, tagId);
+            tagService.deleteTag(userId, projectId, tagId);
             return "redirect:/projects/" + projectId + "/tags";
         } catch (Exception e) {
             log.error("Failed to delete tag", e);

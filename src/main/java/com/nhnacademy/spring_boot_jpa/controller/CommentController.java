@@ -28,10 +28,10 @@ public class CommentController {
                                 @PathVariable Long taskId,
                                 @ModelAttribute CommentCreateRequest request,
                                 @AuthenticationPrincipal UserPrincipal user) {
-        Long memberId = user.getId();
+        String userId = user.getUserId();
 
         try {
-            commentService.createComment(memberId, taskId, request);
+            commentService.createComment(userId, taskId, request);
             return String.format("redirect:/projects/%s/tasks/%s", projectId, taskId);
         } catch (Exception e) {
             log.error("Failed to create comment", e);
@@ -46,11 +46,11 @@ public class CommentController {
                                 @PathVariable Long commentId,
                                 @ModelAttribute CommentUpdateRequest request, // content만 있는 DTO
                                 @AuthenticationPrincipal UserPrincipal user) {
-        Long memberId = user.getId();
+        String userId = user.getUserId();
 
         try {
             // TaskApi는 commentId 작성자와 memberId가 일치하는지 확인해야 함
-            commentService.updateComment(memberId, commentId, request);
+            commentService.updateComment(userId, commentId, request);
             return String.format("redirect:/projects/%s/tasks/%s", projectId, taskId);
         } catch (Exception e) {
             log.error("Failed to update comment", e);
@@ -64,10 +64,10 @@ public class CommentController {
                                 @PathVariable Long taskId,
                                 @PathVariable Long commentId,
                                 @AuthenticationPrincipal UserPrincipal user) {
-        Long memberId = user.getId();
+        String userId = user.getUserId();
 
         try {
-            commentService.deleteComment(memberId, commentId);
+            commentService.deleteComment(userId, commentId);
             return String.format("redirect:/projects/%s/tasks/%s", projectId, taskId);
         } catch (Exception e) {
             log.error("Failed to delete comment", e);
