@@ -1,18 +1,17 @@
 package com.nhnacademy.spring_boot_jpa.dto.account;
 
-
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Getter
-@Setter
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequest {
-
+public class UserResponse {
+    private String userId;
     private String username;
-    private String password;
-
+    private String email;
+    private String status;
 }

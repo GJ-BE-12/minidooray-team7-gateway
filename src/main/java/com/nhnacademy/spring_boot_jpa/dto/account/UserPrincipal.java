@@ -5,14 +5,18 @@ import lombok.Data;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 // 인증된 사용자 정보
-public class UserPrincipal extends User {
-    private final String userId;
-    private final String username;
-    private final String email;
+
+@Getter
+public class UserPrincipal extends User implements Serializable{
+    private String userId;
+    private String username;
+    private String email;
 
     public UserPrincipal(String userId, String username, String password, String email, Collection<? extends GrantedAuthority> authorities) {
         // 부모 User 클래스는 username(loginId), password, authorities를 사용
