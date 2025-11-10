@@ -59,7 +59,7 @@
     <div class="header">
         <h1>프로젝트 목록</h1>
 
-        <form th:action="@{/users/login}" method="post">
+        <form th:action="@{/users/logout}" method="post">
             <span style="margin-right: 1rem;" sec:authentication="name"></span>님
             <button type="submit">로그아웃</button>
         </form>
@@ -86,7 +86,7 @@
             <tr th:each="project : ${projects}">
                 <td th:text="${project.projectId}">1</td>
                 <td>
-                    <a th:href="@{/projects/{projectId}(id=${project.projectId})}"
+                    <a th:href="@{/projects/{id}(id=${project.projectId})}"
                        th:text="${project.name}"
                        class="project-link">샘플 프로젝트</a>
                 </td>

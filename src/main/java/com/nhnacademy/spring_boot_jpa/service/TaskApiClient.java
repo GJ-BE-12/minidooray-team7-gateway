@@ -18,14 +18,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
+import org.springframework.web.client.HttpClientErrorException;
 
 // Task-Api 와 통신을 전담하는 서비스 클래스입니다.
 @Slf4j
@@ -54,7 +54,11 @@ public class TaskApiClient implements ProjectService, TaskService, CommentServic
     // Task-Api: GET /projects
     @Override
     public List<ProjectResponse> getMyProjects(String userId) {
-        String url = taskApiUrl + "/projects";
+//        String url = taskApiUrl + "/projects?userId=" + userId;
+        String url = UriComponentsBuilder
+                .fromHttpUrl(taskApiUrl + "/projects")
+                .queryParam("userId", userId)
+                .toUriString();
         log.info("[TaskApiClient] getMyProjects: {} (User: {})", url, userId);
 
         HttpHeaders headers = createAuthHeaders(userId);
@@ -73,7 +77,12 @@ public class TaskApiClient implements ProjectService, TaskService, CommentServic
     // (로그인한 사용자) 프로젝트 상세 정보를 조회 (태스크 목록 포함)
     @Override
     public ProjectDetailsResponse getProjectDetails(String userId, Long projectId) {
-        String url = taskApiUrl + "/projects/" + projectId;
+//        String url = taskApiUrl + "/projects/" + projectId;
+
+        String url = UriComponentsBuilder
+                .fromHttpUrl(taskApiUrl + "/projects/" + projectId)
+                .queryParam("userId", userId)
+                .toUriString();
         log.info("[TaskApiClient] getProjectDetails: {} (User: {})", url, userId);
 
         HttpHeaders headers = createAuthHeaders(userId);
@@ -125,16 +134,23 @@ public class TaskApiClient implements ProjectService, TaskService, CommentServic
 
     // 프로젝트 멤버 추가 (API 명세에 따라 수정 필요)
     @Override
-    public void addProjectMember(String userId, Long projectId, String username) {
-        String url = taskApiUrl + "/projects/" + projectId + "/members?username=" + username;
-        HttpHeaders headers = createAuthHeaders(userId);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
+    public void addProjectMember(String adminUserId, Long projectId, String username) {
+        String url = taskApiUrl + "/projects/" + projectId + "/members";
+
+        HttpHeaders headers = createAuthHeaders(adminUserId);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        ProjectMemberRequest body = new ProjectMemberRequest();
+        body.setUserId(username); // Set the username of the member to be added
+
+        HttpEntity<ProjectMemberRequest> entity = new HttpEntity<>(body, headers);
+
         restTemplate.postForObject(url, entity, Void.class);
     }
 
     // 프로젝트 멤버 삭제
     @Override
-    public void deleteProjectMember(String userId, Long projectId, Long userIdToRemove) {
+    public void deleteProjectMember(String userId, Long projectId, String userIdToRemove) {
         String url = taskApiUrl + "/projects/" + projectId + "/members/" + userIdToRemove;
         HttpHeaders headers = createAuthHeaders(userId);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
@@ -232,10 +248,14 @@ public class TaskApiClient implements ProjectService, TaskService, CommentServic
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ParameterizedTypeReference<List<TagResponse>> responseType = new ParameterizedTypeReference<>() {};
-        ResponseEntity<List<TagResponse>> response =
-                restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
-
-        return response.getBody();
+        try {
+            ResponseEntity<List<TagResponse>> response =
+                    restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
+            return response.getBody();
+        } catch (HttpClientErrorException.NotFound e) {
+            log.warn("Tags endpoint not found in Task-API for project {}. Returning empty list.", projectId, e);
+            return new ArrayList<>();
+        }
     }
 
     // 태그 생성
@@ -283,10 +303,14 @@ public class TaskApiClient implements ProjectService, TaskService, CommentServic
         HttpEntity<Void> entity = new HttpEntity<>(headers);
 
         ParameterizedTypeReference<List<MilestoneResponse>> responseType = new ParameterizedTypeReference<>() {};
-        ResponseEntity<List<MilestoneResponse>> response =
-                restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
-
-        return response.getBody();
+        try {
+            ResponseEntity<List<MilestoneResponse>> response =
+                    restTemplate.exchange(url, HttpMethod.GET, entity, responseType);
+            return response.getBody();
+        } catch (HttpClientErrorException.NotFound e) {
+            log.warn("Milestones endpoint not found in Task-API for project {}. Returning empty list.", projectId, e);
+            return new ArrayList<>();
+        }
     }
 
     // 마일스톤 생성

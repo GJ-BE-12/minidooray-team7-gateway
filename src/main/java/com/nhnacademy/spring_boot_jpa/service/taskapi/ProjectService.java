@@ -25,8 +25,8 @@ public interface ProjectService {
     List<ProjectMemberResponse> getProjectMembers(String userId, Long projectId);
 
     /** 프로젝트 멤버 추가 */
-    void addProjectMember(String userId, Long projectId, String username);
+    void addProjectMember(String adminUserId, Long projectId, String memberUsername);
 
     /** 프로젝트 멤버 삭제 */
-    void deleteProjectMember(String userId, Long projectId, Long memberIdToRemove);
+    void deleteProjectMember(String userId, Long projectId, String memberIdToRemove);
 }

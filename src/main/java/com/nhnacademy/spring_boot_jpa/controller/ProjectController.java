@@ -5,6 +5,7 @@ import com.nhnacademy.spring_boot_jpa.dto.project.ProjectDetailsResponse;
 import com.nhnacademy.spring_boot_jpa.dto.project.ProjectResponse;
 import com.nhnacademy.spring_boot_jpa.dto.account.UserPrincipal;
 //import com.nhnacademy.spring_boot_jpa.dto.project.ProjectUpdateRequest;
+import com.nhnacademy.spring_boot_jpa.dto.project.Status;
 import com.nhnacademy.spring_boot_jpa.service.taskapi.ProjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,9 +35,12 @@ public class ProjectController {
     @GetMapping
     public String showProjectList(@AuthenticationPrincipal UserPrincipal user,
                                   Model model) {
+        if (user == null) {
+            return "redirect:/users/login";
+        }
 
         String userId = user.getUserId();
-        log.info("member id : {}", userId);
+        log.info("user id : {}", userId);
 
         try {
             List<ProjectResponse> projects = projectService.getMyProjects(userId);
@@ -64,6 +68,7 @@ public class ProjectController {
                                 @AuthenticationPrincipal UserPrincipal user) {
         try {
             request.setUserId(user.getUserId());
+            request.setStatus(Status.ACTIVE);
             projectService.createProject(request);
             return "redirect:/projects";
         } catch (Exception e) {

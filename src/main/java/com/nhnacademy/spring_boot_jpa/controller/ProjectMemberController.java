@@ -55,12 +55,13 @@ public class ProjectMemberController {
     }
 
     // URL : DELETE /projects/{projectId}/members/{memberId}
-    @DeleteMapping("/{memberId}")
+    @DeleteMapping("/{userId}")
     public String deleteProjectMember(@PathVariable long projectId,
-                                      @PathVariable long memberId,
+                                      @PathVariable String userId,
                                       @AuthenticationPrincipal UserPrincipal user) {
         try {
-            projectService.deleteProjectMember(user.getUserId(), projectId, memberId);
+            projectService.deleteProjectMember(user.getUserId(), projectId, userId);
+            log.info("{} 삭제", userId);
         } catch (Exception e) {
             log.error("Failed to delete project member", e);
             return "redirect:/projects/" + projectId + "/members?error=member_delete_failed";

@@ -11,18 +11,20 @@
 
     <table>
         <thead>
-        <tr> <th>ID</th> <th>Username</th> <th>Email</th> <th>삭제</th> </tr>
+        <tr> <th>User-ID</th> <!--<th>Username</th>--> <th>삭제</th> </tr>
         </thead>
         <tbody>
         <tr th:each="member : ${members}">
-            <td th:text="${member.memberId}">1</td>
-            <td th:text="${member.username}">member1</td>
-            <td th:text="${member.email}">member1@dooray.com</td>
+            <td th:text="${member.userId}">1</td>
+<!--            <td th:text="${member.userId}">member1</td>-->
             <td>
-                <form th:action="@{/projects/{projectId}/members/{memberId}(projectId=${projectId}, memberId=${member.memberId})}" method="post" onsubmit="return confirm('정말로 이 멤버를 삭제하시겠습니까?');">
-                    <input type="hidden" name="_method" value="delete" />
+                <form th:action="@{/projects/{projectId}/members/{userId}(projectId=${projectId}, userId=${member.userId})}"
+                      th:method="post"
+                      onsubmit="return confirm('정말로 이 멤버를 삭제하시겠습니까?');">
+                    <input type="hidden" name="_method" value="delete"/>
                     <button type="submit" class="delete-button">삭제</button>
                 </form>
+
             </td>
         </tr>
         </tbody>

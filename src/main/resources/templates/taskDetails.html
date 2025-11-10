@@ -69,6 +69,8 @@
                 <strong>태그:</strong>
                 <span th:each="tag : *{tags}" class="tag" th:text="${tag.name}">태그1</span>
             </div>
+            <a th:href="@{/projects/{id}/tags(id=${projectId})}" class="action-button" style="background-color: #17a2b8;">태그 관리</a>
+            <a th:href="@{/projects/{id}/milestones(id=${projectId})}" class="action-button" style="background-color: #ffc107; color: #212529;">마일스톤 관리</a>
         </div>
 
         <h2>내용</h2>
