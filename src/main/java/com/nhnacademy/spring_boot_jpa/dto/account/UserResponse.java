@@ -1,17 +1,17 @@
 package com.nhnacademy.spring_boot_jpa.dto.account;
 
-
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-// 로그인 요청
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequest {
-
+public class UserResponse {
+    private Long userId;
     private String username;
-    private String password;
-
+    private String email;
+    private String status;
 }

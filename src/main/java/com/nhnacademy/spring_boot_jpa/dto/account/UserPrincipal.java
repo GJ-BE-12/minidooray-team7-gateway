@@ -5,12 +5,14 @@ import lombok.Data;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 // 인증된 사용자 정보
 @Getter
-public class UserPrincipal extends User {
+public class UserPrincipal extends User implements Serializable{
     private Long id;
     private String username;
     private String email;

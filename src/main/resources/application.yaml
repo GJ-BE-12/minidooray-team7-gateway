@@ -19,6 +19,8 @@ api:
     url: http://localhost:8081  # 팀원이 만든 Account API 주소
   task:
     url: http://localhost:8082
+# 220.67.223.52
+
 
 
 
