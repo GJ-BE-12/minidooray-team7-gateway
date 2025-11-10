@@ -1,8 +1,23 @@
+### 프로젝트 생성
+POST http://172.24.101.208:8082/projects/1
+Content-Type: application/json
+
+{
+  "projectName" : "Mini-Dooray 프로젝트"
+}
+
+### 프로젝트 리스트
+GET http://172.24.101.208:8082/projects
+Accept: application/json
+
+
+
+
+
+
+
 ### 프로젝트(id=1)의 멤버 조회
 GET http://172.24.101.208:8082/projects/1/members
-
-
-
 
 ### 프로젝트(id=1) 멤버(id=1) 추가
 POST http://172.24.101.208:8082/projects/2/members
@@ -11,9 +26,6 @@ Content-Type: application/json
 {
   "userId" : 202022
 }
-
-
-
 
 ###
 GET http://172.24.101.208:8082/projects/1/members

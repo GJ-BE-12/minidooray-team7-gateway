@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ProjectCreateRequest {
-    private String projectName;
-    // 생성 시 기본 상태는 TaskApi에서 "활성"으로 처리
+    String userId;
+    String name;
+    Status status;
 }

@@ -4,7 +4,7 @@ import com.nhnacademy.spring_boot_jpa.dto.project.ProjectCreateRequest;
 import com.nhnacademy.spring_boot_jpa.dto.project.ProjectDetailsResponse;
 import com.nhnacademy.spring_boot_jpa.dto.project.ProjectResponse;
 import com.nhnacademy.spring_boot_jpa.dto.account.UserPrincipal;
-import com.nhnacademy.spring_boot_jpa.dto.project.ProjectUpdateRequest;
+//import com.nhnacademy.spring_boot_jpa.dto.project.ProjectUpdateRequest;
 import com.nhnacademy.spring_boot_jpa.service.taskapi.ProjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,7 +63,8 @@ public class ProjectController {
     public String createProject(@ModelAttribute ProjectCreateRequest request,
                                 @AuthenticationPrincipal UserPrincipal user) {
         try {
-            projectService.createProject(user.getUserId(), request);
+            request.setUserId(user.getUserId());
+            projectService.createProject(request);
             return "redirect:/projects";
         } catch (Exception e) {
             log.error("Failed to create project", e);
@@ -72,50 +73,50 @@ public class ProjectController {
     }
 
     // URL : GET /projects/{projectId}/edit
-    @GetMapping("/{projectId}/edit")
-    public String showUpdateProjectForm(@PathVariable long projectId,
-                                        @AuthenticationPrincipal UserPrincipal user,
-                                        Model model) {
-        ProjectDetailsResponse project = projectService.getProjectDetails(user.getUserId(), projectId);
-
-        // ProjectDetailsResponse -> ProjectUpdateRequest 변환
-        ProjectUpdateRequest request = new ProjectUpdateRequest();
-        request.setProjectName(project.getProjectName());
-        request.setProjectStatus(project.getProjectStatus());
-
-        model.addAttribute("projectUpdateRequest", request);
-        model.addAttribute("projectId", projectId);
-        model.addAttribute("isUpdate", true);
-
-        return "projectForm";
-    }
+//    @GetMapping("/{projectId}/edit")
+//    public String showUpdateProjectForm(@PathVariable long projectId,
+//                                        @AuthenticationPrincipal UserPrincipal user,
+//                                        Model model) {
+//        ProjectDetailsResponse project = projectService.getProjectDetails(user.getUserId(), projectId);
+//
+//        // ProjectDetailsResponse -> ProjectUpdateRequest 변환
+//        ProjectUpdateRequest request = new ProjectUpdateRequest();
+//        request.setProjectName(project.getProjectName());
+//        request.setProjectStatus(project.getProjectStatus());
+//
+//        model.addAttribute("projectUpdateRequest", request);
+//        model.addAttribute("projectId", projectId);
+//        model.addAttribute("isUpdate", true);
+//
+//        return "projectForm";
+//    }
 
     // URL : PUT /projects/{projectId}
-    @PutMapping("/{projectId}")
-    public String updateProject(@PathVariable long projectId,
-                                @ModelAttribute ProjectUpdateRequest request,
-                                @AuthenticationPrincipal UserPrincipal user) {
-        try {
-            projectService.updateProject(user.getUserId(), projectId, request);
-            return "redirect:/projects/" + projectId;
-        } catch (Exception e) {
-            log.error("Failed to update project", e);
-            return "redirect:/projects/" + projectId + "/edit?error=project_update_failed";
-        }
-    }
+//    @PutMapping("/{projectId}")
+//    public String updateProject(@PathVariable long projectId,
+//                                @ModelAttribute ProjectUpdateRequest request,
+//                                @AuthenticationPrincipal UserPrincipal user) {
+//        try {
+//            projectService.updateProject(user.getUserId(), projectId, request);
+//            return "redirect:/projects/" + projectId;
+//        } catch (Exception e) {
+//            log.error("Failed to update project", e);
+//            return "redirect:/projects/" + projectId + "/edit?error=project_update_failed";
+//        }
+//    }
 
     // URL : DELETE /projects/{projectId}
-    @DeleteMapping("/{projectId}")
-    public String deleteProject(@PathVariable long projectId,
-                                @AuthenticationPrincipal UserPrincipal user) {
-        try {
-            projectService.deleteProject(user.getUserId(), projectId);
-            return "redirect:/projects";
-        } catch (Exception e) {
-            log.error("Failed to delete project", e);
-            return "redirect:/projects?error=project_delete_failed";
-        }
-    }
+//    @DeleteMapping("/{projectId}")
+//    public String deleteProject(@PathVariable long projectId,
+//                                @AuthenticationPrincipal UserPrincipal user) {
+//        try {
+//            projectService.deleteProject(user.getUserId(), projectId);
+//            return "redirect:/projects";
+//        } catch (Exception e) {
+//            log.error("Failed to delete project", e);
+//            return "redirect:/projects?error=project_delete_failed";
+//        }
+//    }
 
     // URL : GET /projects/{projectId}
     @GetMapping("/{projectId}")

@@ -19,6 +19,38 @@
         .empty-list { text-align: center; color: #777; padding: 2rem; }
         .project-link { color: #007bff; text-decoration: none; }
         .project-link:hover { text-decoration: underline; }
+        .actions-bar {
+            margin-bottom: 1rem;
+            text-align: right; /* 버튼을 오른쪽 정렬 */
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none; /* <a> 태그일 경우를 위해 */
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* 테이블 안의 버튼들 스타일 */
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9em;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
     </style>
 </head>
 <body>
@@ -27,7 +59,7 @@
     <div class="header">
         <h1>프로젝트 목록</h1>
 
-        <form th:action="@{users/login}" method="post">
+        <form th:action="@{/users/login}" method="post">
             <span style="margin-right: 1rem;" sec:authentication="name"></span>님
             <button type="submit">로그아웃</button>
         </form>
@@ -37,7 +69,9 @@
         프로젝트 목록을 불러오는 데 실패했습니다.
     </div>
 
-<!--    todo 생성버튼, admin이면 프로젝트멤버추가 보이게 -->
+    <div class="actions-bar">
+        <a th:href="@{/projects/new}" class="btn">프로젝트 생성</a>
+    </div>
     <div th:unless="${error}">
         <table>
             <thead>
@@ -45,29 +79,29 @@
                 <th>프로젝트 ID</th>
                 <th>프로젝트명</th>
                 <th>상태</th>
-                <th>관리</th>
+<!--                <th>관리</th>-->
             </tr>
             </thead>
             <tbody>
             <tr th:each="project : ${projects}">
                 <td th:text="${project.projectId}">1</td>
                 <td>
-                    <a th:href="@{/projects/{id}(id=${project.projectId})}"
-                       th:text="${project.projectName}"
+                    <a th:href="@{/projects/{projectId}(id=${project.projectId})}"
+                       th:text="${project.name}"
                        class="project-link">샘플 프로젝트</a>
                 </td>
-                <td th:text="${project.projectStatus}">활성</td>
-                <td>
-                    <a th:href="@{/projects/{id}/edit(id=${project.projectId})}">수정</a>
-                    <form th:action="@{/projects/{id}(id=${project.projectId})}" method="post" style="display: inline;" onsubmit="return confirm('정말로 이 프로젝트를 삭제하시겠습니까?');">
-                        <input type="hidden" name="_method" value="delete" />
-                        <button type="submit">삭제</button>
-                    </form>
-                </td>
+                <td th:text="${project.status}">활성</td>
+<!--                <td>-->
+<!--                    <a th:href="@{/projects/{projectId}/edit(id=${project.projectId})}">수정</a>-->
+<!--                    <form th:action="@{/projects/{projectId}(id=${project.projectId})}" method="post" style="display: inline;" onsubmit="return confirm('정말로 이 프로젝트를 삭제하시겠습니까?');">-->
+<!--                        <input type="hidden" name="_method" value="delete" />-->
+<!--                        <button type="submit">삭제</button>-->
+<!--                    </form>-->
+<!--                </td>-->
             </tr>
 
             <tr th:if="${#lists.isEmpty(projects)}">
-                <td colspan="3" class="empty-list">표시할 프로젝트가 없습니다.</td>
+                <td colspan="4" class="empty-list">표시할 프로젝트가 없습니다.</td>
             </tr>
             </tbody>
         </table>

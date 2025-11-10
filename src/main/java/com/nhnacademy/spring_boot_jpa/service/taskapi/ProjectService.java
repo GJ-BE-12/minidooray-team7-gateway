@@ -11,13 +11,13 @@ public interface ProjectService {
     ProjectDetailsResponse getProjectDetails(String userId, Long projectId);
 
     /** 프로젝트 생성 */
-    void createProject(String userId, ProjectCreateRequest request);
+    void createProject(ProjectCreateRequest request);
 
     /** 프로젝트 수정 */
-    void updateProject(String userId, Long projectId, ProjectUpdateRequest request);
+//    void updateProject(String userId, Long projectId, ProjectUpdateRequest request);
 
     /** 프로젝트 삭제 */
-    void deleteProject(String userId, Long projectId);
+//    void deleteProject(String userId, Long projectId);
 
     // --------------------------
 

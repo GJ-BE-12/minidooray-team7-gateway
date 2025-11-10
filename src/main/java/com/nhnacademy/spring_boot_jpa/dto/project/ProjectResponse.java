@@ -12,13 +12,9 @@ import java.time.ZonedDateTime;
 @Setter
 @NoArgsConstructor
 public class ProjectResponse {
-//    private long projectId;
-//    private String projectName;
-//    private String projectStatus; // Enum 타입 -> String으로 변환해서 받을 수 있는지...
-
     private long projectId;
     private String name;
-    private String status;
+    private Status status;
     private String userId;
     private ZonedDateTime createdAt;
 }

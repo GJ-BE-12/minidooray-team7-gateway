@@ -48,6 +48,8 @@ public class TaskApiClient implements ProjectService, TaskService, CommentServic
         return headers;
     }
 
+    // ------------------------------------------------------------------------------------
+
     // (로그인한 사용자) 프로젝트 목록을 조회
     // Task-Api: GET /projects
     @Override
@@ -83,33 +85,32 @@ public class TaskApiClient implements ProjectService, TaskService, CommentServic
         return response.getBody();
     }
 
-    // ------------------------------------------------------------------------------------
-
     // 프로젝트 생성
     @Override
-    public void createProject(String userId, ProjectCreateRequest request) {
+    public void createProject(ProjectCreateRequest request) {
         String url = taskApiUrl + "/projects";
-        HttpHeaders headers = createAuthHeaders(userId);
-        HttpEntity<ProjectCreateRequest> entity = new HttpEntity<>(request, headers);
+        HttpEntity<ProjectCreateRequest> entity = new HttpEntity<>(request);
         restTemplate.postForObject(url, entity, Void.class);
     }
 
     // 프로젝트 수정
-    @Override
-    public void updateProject(String userId, Long projectId, ProjectUpdateRequest request) {
-        String url = taskApiUrl + "/projects/" + projectId;
-        HttpHeaders headers = createAuthHeaders(userId);
-        HttpEntity<ProjectUpdateRequest> entity = new HttpEntity<>(request, headers);
-        restTemplate.exchange(url, HttpMethod.PUT, entity, Void.class);
-    }
+//    @Override
+//    public void updateProject(String userId, Long projectId, ProjectUpdateRequest request) {
+//        String url = taskApiUrl + "/projects/" + projectId;
+//        HttpHeaders headers = createAuthHeaders(userId);
+//        HttpEntity<ProjectUpdateRequest> entity = new HttpEntity<>(request, headers);
+//        restTemplate.exchange(url, HttpMethod.PUT, entity, Void.class);
+//    }
 
-    @Override
-    public void deleteProject(String userId, Long projectId) {
-        String url = taskApiUrl + "/projects/" + projectId;
-        HttpHeaders headers = createAuthHeaders(userId);
-        HttpEntity<Void> entity = new HttpEntity<>(headers);
-        restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class);
-    }
+//    @Override
+//    public void deleteProject(String userId, Long projectId) {
+//        String url = taskApiUrl + "/projects/" + projectId;
+//        HttpHeaders headers = createAuthHeaders(userId);
+//        HttpEntity<Void> entity = new HttpEntity<>(headers);
+//        restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class);
+//    }
+
+    // ------------------------------------------------------------------------------------
 
     // 프로젝트 멤버 목록 조회
     @Override

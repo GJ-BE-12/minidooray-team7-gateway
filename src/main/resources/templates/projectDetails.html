@@ -51,6 +51,7 @@
     </div>
 
     <div class="management-links">
+        <a th:href="@{/projects/{id}/members(id=${projectId})}" class="action-button" style="background-color: #68bf4d; color: #212529;">멤버 관리</a>
         <a th:href="@{/projects/{id}/tags(id=${projectId})}" class="action-button" style="background-color: #17a2b8;">태그 관리</a>
         <a th:href="@{/projects/{id}/milestones(id=${projectId})}" class="action-button" style="background-color: #ffc107; color: #212529;">마일스톤 관리</a>
     </div>
