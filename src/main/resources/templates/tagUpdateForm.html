@@ -7,9 +7,10 @@
 <body>
 <div class="container">
     <h1>태그 수정</h1>
-    <form th:action="@{/projects/{projectId}/tags/{tagId}/update(projectId=${projectId}, tagId=${tagId})}"
+    <form th:action="@{/projects/{projectId}/tags/{tagId}(projectId=${projectId}, tagId=${tagId})}"
           th:object="${tagUpdateRequest}" method="post">
-        <input type="text" th:field="*{tagName}" placeholder="새 태그명" required>
+        <input type="hidden" name="_method" value="put" />
+        <input type="text" th:field="*{name}" placeholder="새 태그명" required>
         <button type="submit">태그 수정</button>
     </form>
     <a th:href="@{/projects/{id}/tags(id=${projectId})}" class="back-link">태그 목록으로 돌아가기</a>

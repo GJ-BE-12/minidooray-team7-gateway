@@ -20,7 +20,7 @@
 <div class="container">
     <div class="header">
         <h1>마일스톤 관리</h1>
-        <a th:href="@{/projects/{id}(id=${projectId})}" class="back-link">프로젝트로 돌아가기</a>
+        <a th:href="@{/projects/{projectId}(projectId=${projectId})}" class="back-link">프로젝트로 돌아가기</a>
     </div>
 
     <div th:if="${param.error}" class="alert alert-danger">
@@ -38,9 +38,10 @@
         <tbody>
         <tr th:each="ms : ${milestones}">
             <td th:text="${ms.milestoneId}">1</td>
-            <td th:text="${ms.milestoneName}">v1.0</td>
+            <td th:text="${ms.name}">v1.0</td>
             <td>
-                <form th:action="@{/projects/{projectId}/milestones/{msId}/delete(projectId=${projectId}, msId=${ms.milestoneId})}" method="post">
+                <form th:action="@{/projects/{projectId}/milestones/{milestoneId}(projectId=${projectId}, milestoneId=${ms.milestoneId})}" method="post" onsubmit="return confirm('정말로 이 마일스톤을 삭제하시겠습니까?');">
+                    <input type="hidden" name="_method" value="delete" />
                     <button type="submit" class="delete-button">삭제</button>
                 </form>
             </td>
@@ -53,8 +54,8 @@
 
     <div class="form-section">
         <h2>새 마일스톤 생성</h2>
-        <form th:action="@{/projects/{id}/milestones(id=${projectId})}" th:object="${milestoneCreateRequest}" method="post">
-            <input type="text" th:field="*{milestoneName}" placeholder="마일스톤명" required>
+        <form th:action="@{/projects/{projectId}/milestones(projectId=${projectId})}" th:object="${milestoneCreateRequest}" method="post">
+            <input type="text" th:field="*{name}" placeholder="마일스톤명" required>
             <button type="submit">마일스톤 생성</button>
         </form>
     </div>

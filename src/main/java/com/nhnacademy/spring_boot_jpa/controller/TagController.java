@@ -61,16 +61,14 @@ public class TagController {
     public String showUpdateTagForm(@PathVariable Long projectId,
                                     @PathVariable Long tagId,
                                     Model model) {
-        // (단순화) 기존 이름을 알 수 없으므로 빈 폼 제공
-        // (개선) getTagDetails API가 있다면 기존 정보 조회
         model.addAttribute("tagUpdateRequest", new TagUpdateRequest());
         model.addAttribute("projectId", projectId);
         model.addAttribute("tagId", tagId);
-        return "tagUpdateForm"; // 템플릿 (4번 항목 참고)
+        return "tagUpdateForm";
     }
 
-    // URL: POST /projects/{projectId}/tags/{tagsId}/update
-    @PostMapping("/{tagId}/update")
+    // URL: PUT /projects/{projectId}/tags/{tagId}
+    @PutMapping("/{tagId}")
     public String updateTag(@PathVariable Long projectId,
                             @PathVariable Long tagId,
                             @ModelAttribute TagUpdateRequest request,
@@ -84,8 +82,8 @@ public class TagController {
         }
     }
 
-    // URL: GET /projects/{projectId}/tags/{tags}/delete
-    @PostMapping("/{tagId}/delete")
+    // URL: DELETE /projects/{projectId}/tags/{tagId}
+    @DeleteMapping("/{tagId}")
     public String deleteTag(@PathVariable Long projectId,
                             @PathVariable Long tagId,
                             @AuthenticationPrincipal UserPrincipal user) {

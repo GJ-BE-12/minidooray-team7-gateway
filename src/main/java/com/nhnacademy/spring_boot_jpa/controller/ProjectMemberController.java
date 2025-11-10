@@ -54,8 +54,8 @@ public class ProjectMemberController {
         return "redirect:/projects/" + projectId + "/members";
     }
 
-    // URL : GET /projects/{projectId}/members/delete
-    @PostMapping("/{memberId}/delete")
+    // URL : DELETE /projects/{projectId}/members/{memberId}
+    @DeleteMapping("/{memberId}")
     public String deleteProjectMember(@PathVariable long projectId,
                                       @PathVariable long memberId,
                                       @AuthenticationPrincipal UserPrincipal user) {

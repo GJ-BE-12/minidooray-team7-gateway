@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
@@ -39,12 +41,12 @@ public class CommentController {
         }
     }
 
-    // URL: POST /projects/{projectId}/tasks/{taskId}/comments/{commentId}/update
-    @PostMapping("/{commentId}/update")
+    // URL: PUT /projects/{projectId}/tasks/{taskId}/comments/{commentId}
+    @PutMapping("/{commentId}")
     public String updateComment(@PathVariable Long projectId,
                                 @PathVariable Long taskId,
                                 @PathVariable Long commentId,
-                                @ModelAttribute CommentUpdateRequest request, // content만 있는 DTO
+                                @ModelAttribute CommentUpdateRequest request,
                                 @AuthenticationPrincipal UserPrincipal user) {
         String userId = user.getUserId();
 
@@ -58,8 +60,8 @@ public class CommentController {
         }
     }
 
-     // URL: POST /projects/{projectId}/tasks/{taskId}/comments/{commentId}/delete
-    @PostMapping("/{commentId}/delete")
+    // URL: DELETE /projects/{projectId}/tasks/{taskId}/comments/{commentId}
+    @DeleteMapping("/{commentId}")
     public String deleteComment(@PathVariable Long projectId,
                                 @PathVariable Long taskId,
                                 @PathVariable Long commentId,

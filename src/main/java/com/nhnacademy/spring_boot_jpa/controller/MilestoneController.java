@@ -67,8 +67,8 @@ public class MilestoneController {
         return "milestoneUpdateForm";
     }
 
-    // URL: POST /projects/{projectId}/milestones/{milestoneId}/update
-    @PostMapping("/{milestoneId}/update")
+    // URL: PUT /projects/{projectId}/milestones/{milestoneId}
+    @PutMapping("/{milestoneId}")
     public String updateMilestone(@PathVariable Long projectId,
                                   @PathVariable Long milestoneId,
                                   @ModelAttribute MilestoneUpdateRequest request,
@@ -82,8 +82,8 @@ public class MilestoneController {
         }
     }
 
-    // URL: POST /projects/{projectId}/milestones/{milestoneId}/delete
-    @PostMapping("/{milestoneId}/delete")
+    // URL: DELETE /projects/{projectId}/milestones/{milestoneId}
+    @DeleteMapping("/{milestoneId}")
     public String deleteMilestone(@PathVariable Long projectId,
                                   @PathVariable Long milestoneId,
                                   @AuthenticationPrincipal UserPrincipal user) {

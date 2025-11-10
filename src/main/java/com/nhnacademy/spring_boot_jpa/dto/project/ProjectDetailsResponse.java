@@ -3,11 +3,15 @@ package com.nhnacademy.spring_boot_jpa.dto.project;
 import com.nhnacademy.spring_boot_jpa.dto.milestone.MilestoneResponse;
 import com.nhnacademy.spring_boot_jpa.dto.tag.TagResponse;
 import com.nhnacademy.spring_boot_jpa.dto.task.TaskResponse;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class ProjectDetailsResponse {
     private long projectId;
     private String projectName;

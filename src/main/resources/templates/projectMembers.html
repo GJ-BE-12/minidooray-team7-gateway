@@ -19,7 +19,8 @@
             <td th:text="${member.username}">member1</td>
             <td th:text="${member.email}">member1@dooray.com</td>
             <td>
-                <form th:action="@{/projects/{projectId}/members/{memberId}/delete(projectId=${projectId}, memberId=${member.memberId})}" method="post">
+                <form th:action="@{/projects/{projectId}/members/{memberId}(projectId=${projectId}, memberId=${member.memberId})}" method="post" onsubmit="return confirm('정말로 이 멤버를 삭제하시겠습니까?');">
+                    <input type="hidden" name="_method" value="delete" />
                     <button type="submit" class="delete-button">삭제</button>
                 </form>
             </td>

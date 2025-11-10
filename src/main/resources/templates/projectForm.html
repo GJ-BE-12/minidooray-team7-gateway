@@ -16,7 +16,8 @@
         <button type="submit">프로젝트 생성</button>
     </form>
 
-    <form th:if="${isUpdate != null}" th:action="@{/projects/{id}/update(id=${projectId})}" th:object="${projectUpdateRequest}" method="post">
+    <form th:if="${isUpdate != null}" th:action="@{/projects/{id}(id=${projectId})}" th:object="${projectUpdateRequest}" method="post">
+        <input type="hidden" name="_method" value="put" />
         <div class="form-group">
             <label for="updateProjectName">프로젝트 이름:</label>
             <input type="text" id="updateProjectName" th:field="*{projectName}" required>

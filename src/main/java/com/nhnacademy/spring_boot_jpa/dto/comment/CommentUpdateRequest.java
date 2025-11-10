@@ -1,10 +1,11 @@
 package com.nhnacademy.spring_boot_jpa.dto.comment;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-// 댓글 수정을 위한 DTO
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class CommentUpdateRequest {
     private String content;

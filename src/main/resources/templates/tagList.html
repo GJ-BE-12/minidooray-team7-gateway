@@ -38,9 +38,10 @@
         <tbody>
         <tr th:each="tag : ${tags}">
             <td th:text="${tag.tagId}">1</td>
-            <td th:text="${tag.tagName}">태그1</td>
+            <td th:text="${tag.name}">태그1</td>
             <td>
-                <form th:action="@{/projects/{projectId}/tags/{tagId}/delete(projectId=${projectId}, tagId=${tag.tagId})}" method="post">
+                <form th:action="@{/projects/{projectId}/tags/{tagId}(projectId=${projectId}, tagId=${tag.tagId})}" method="post" onsubmit="return confirm('정말로 이 태그를 삭제하시겠습니까?');">
+                    <input type="hidden" name="_method" value="delete" />
                     <button type="submit" class="delete-button">삭제</button>
                 </form>
             </td>
@@ -54,7 +55,7 @@
     <div class="form-section">
         <h2>새 태그 생성</h2>
         <form th:action="@{/projects/{id}/tags(id=${projectId})}" th:object="${tagCreateRequest}" method="post">
-            <input type="text" th:field="*{tagName}" placeholder="태그명" required>
+            <input type="text" th:field="*{name}" placeholder="태그명" required>
             <button type="submit">태그 생성</button>
         </form>
     </div>

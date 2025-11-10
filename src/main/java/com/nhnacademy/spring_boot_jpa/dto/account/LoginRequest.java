@@ -2,11 +2,12 @@ package com.nhnacademy.spring_boot_jpa.dto.account;
 
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-// 로그인 요청
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginRequest {

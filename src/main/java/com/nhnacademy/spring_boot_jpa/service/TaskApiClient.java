@@ -103,6 +103,14 @@ public class TaskApiClient implements ProjectService, TaskService, CommentServic
         restTemplate.exchange(url, HttpMethod.PUT, entity, Void.class);
     }
 
+    @Override
+    public void deleteProject(String userId, Long projectId) {
+        String url = taskApiUrl + "/projects/" + projectId;
+        HttpHeaders headers = createAuthHeaders(userId);
+        HttpEntity<Void> entity = new HttpEntity<>(headers);
+        restTemplate.exchange(url, HttpMethod.DELETE, entity, Void.class);
+    }
+
     // 프로젝트 멤버 목록 조회
     @Override
     public List<ProjectMemberResponse> getProjectMembers(String userId, Long projectId) {
@@ -117,7 +125,7 @@ public class TaskApiClient implements ProjectService, TaskService, CommentServic
     // 프로젝트 멤버 추가 (API 명세에 따라 수정 필요)
     @Override
     public void addProjectMember(String userId, Long projectId, String username) {
-        String url = taskApiUrl + "/projects/" + projectId + "/members?username=" + username; // 예시
+        String url = taskApiUrl + "/projects/" + projectId + "/members?username=" + username;
         HttpHeaders headers = createAuthHeaders(userId);
         HttpEntity<Void> entity = new HttpEntity<>(headers);
         restTemplate.postForObject(url, entity, Void.class);
@@ -156,7 +164,6 @@ public class TaskApiClient implements ProjectService, TaskService, CommentServic
         log.info("[TaskApiClient] createTask: {} (User: {})", url, userId);
 
         HttpHeaders headers = createAuthHeaders(userId);
-        // 요청 본문(request)과 헤더를 합쳐 HttpEntity를 생성합니다.
         HttpEntity<TaskCreateRequest> entity = new HttpEntity<>(request, headers);
 
         restTemplate.postForObject(url, entity, Void.class);

@@ -1,13 +1,15 @@
 package com.nhnacademy.spring_boot_jpa.dto.milestone;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import java.time.ZonedDateTime;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class MilestoneCreateRequest {
-    private String milestoneName;
+    private String name;
     private ZonedDateTime startDate;
     private ZonedDateTime endDate;
 }

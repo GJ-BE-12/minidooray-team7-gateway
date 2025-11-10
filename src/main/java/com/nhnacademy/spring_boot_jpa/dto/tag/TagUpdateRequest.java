@@ -1,11 +1,12 @@
 package com.nhnacademy.spring_boot_jpa.dto.tag;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-// 태그 수정을 위한 DTO
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class TagUpdateRequest {
-    private String tagName;
+    private String name;
 }

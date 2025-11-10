@@ -32,6 +32,19 @@
         .task-associations { margin-top: 1.5rem; }
         .tag { display: inline-block; background-color: #e0e0e0; color: #333; padding: 0.25rem 0.5rem; border-radius: 4px; margin-right: 0.25rem; font-size: 0.85rem;}
         .milestone { display: block; background-color: #d4edda; color: #155724; padding: 0.5rem; border-radius: 4px; margin-bottom: 0.5rem;}
+
+        .action-button {
+            padding: 0.6rem 1.2rem;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .action-button:hover { opacity: 0.85; }
     </style>
 </head>
 <body>
@@ -50,17 +63,25 @@
 
         <div class="task-associations">
             <div th:if="*{milestone != null}" class="milestone">
-                <strong>마일스톤:</strong> <span th:text="*{milestone.milestoneName}">마일스톤 이름</span>
+                <strong>마일스톤:</strong> <span th:text="*{milestone.name}">마일스톤 이름</span>
             </div>
             <div th:unless="*{#lists.isEmpty(tags)}">
                 <strong>태그:</strong>
-                <span th:each="tag : *{tags}" class="tag" th:text="${tag.tagName}">태그1</span>
+                <span th:each="tag : *{tags}" class="tag" th:text="${tag.name}">태그1</span>
             </div>
         </div>
 
         <h2>내용</h2>
-        <div class="task-content" th:text="*{content}">
+        <div class="task-content" th:text="*{body}">
             태스크 상세 내용이 여기에 표시됩니다.
+        </div>
+
+        <div class="task-actions" style="margin-top: 1.5rem;">
+            <a th:href="@{/projects/{projectId}/tasks/{taskId}/edit(projectId=${task.projectId}, taskId=${task.taskId})}" class="action-button" style="background-color: #007bff;">수정</a>
+            <form th:action="@{/projects/{projectId}/tasks/{taskId}(projectId=${task.projectId}, taskId=${task.taskId})}" method="post" style="display: inline;" onsubmit="return confirm('정말로 이 태스크를 삭제하시겠습니까?');">
+                <input type="hidden" name="_method" value="delete" />
+                <button type="submit" class="action-button" style="background-color: #dc3545;">삭제</button>
+            </form>
         </div>
     </div>
 
@@ -70,6 +91,25 @@
             <li th:each="comment : *{comments}" class="comment-item">
                 <div class="comment-author" th:text="${comment.authorName}">댓글 작성자</div>
                 <div class="comment-content" th:text="${comment.content}">댓글 내용</div>
+
+                <!-- 댓글 수정 및 삭제 버튼 -->
+                <div class="comment-actions" style="margin-top: 0.5rem;"
+                     th:with="currentUser=${#authentication.principal.username}"
+                     th:if="${comment.authorName == currentUser}">
+
+                    <!-- 간단한 인라인 수정 폼 -->
+                    <form th:action="@{/projects/{projectId}/tasks/{taskId}/comments/{commentId}(projectId=${task.projectId}, taskId=${task.taskId}, commentId=${comment.commentId})}" method="post" style="display: inline;">
+                        <input type="hidden" name="_method" value="put" />
+                        <input type="text" name="content" th:value="${comment.content}" required />
+                        <button type="submit" class="action-button" style="background-color: #ffc107; font-size: 0.8rem; padding: 0.2rem 0.5rem;">수정</button>
+                    </form>
+
+                    <!-- 삭제 폼 -->
+                    <form th:action="@{/projects/{projectId}/tasks/{taskId}/comments/{commentId}(projectId=${task.projectId}, taskId=${task.taskId}, commentId=${comment.commentId})}" method="post" style="display: inline;" onsubmit="return confirm('정말로 이 댓글을 삭제하시겠습니까?');">
+                        <input type="hidden" name="_method" value="delete" />
+                        <button type="submit" class="action-button" style="background-color: #dc3545; font-size: 0.8rem; padding: 0.2rem 0.5rem;">삭제</button>
+                    </form>
+                </div>
             </li>
             <li th:if="${#lists.isEmpty(task.comments)}" class="no-comments">
                 작성된 댓글이 없습니다.

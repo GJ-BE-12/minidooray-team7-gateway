@@ -16,6 +16,11 @@ public interface ProjectService {
     /** 프로젝트 수정 */
     void updateProject(String userId, Long projectId, ProjectUpdateRequest request);
 
+    /** 프로젝트 삭제 */
+    void deleteProject(String userId, Long projectId);
+
+    // --------------------------
+
     /** 프로젝트 멤버 목록 조회 */
     List<ProjectMemberResponse> getProjectMembers(String userId, Long projectId);
 

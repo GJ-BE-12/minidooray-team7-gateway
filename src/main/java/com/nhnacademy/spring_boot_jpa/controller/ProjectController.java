@@ -90,8 +90,8 @@ public class ProjectController {
         return "projectForm";
     }
 
-    // URL : POST /projects/{projectId}/update
-    @PostMapping("/{projectId}/update")
+    // URL : PUT /projects/{projectId}
+    @PutMapping("/{projectId}")
     public String updateProject(@PathVariable long projectId,
                                 @ModelAttribute ProjectUpdateRequest request,
                                 @AuthenticationPrincipal UserPrincipal user) {
@@ -101,6 +101,19 @@ public class ProjectController {
         } catch (Exception e) {
             log.error("Failed to update project", e);
             return "redirect:/projects/" + projectId + "/edit?error=project_update_failed";
+        }
+    }
+
+    // URL : DELETE /projects/{projectId}
+    @DeleteMapping("/{projectId}")
+    public String deleteProject(@PathVariable long projectId,
+                                @AuthenticationPrincipal UserPrincipal user) {
+        try {
+            projectService.deleteProject(user.getUserId(), projectId);
+            return "redirect:/projects";
+        } catch (Exception e) {
+            log.error("Failed to delete project", e);
+            return "redirect:/projects?error=project_delete_failed";
         }
     }
 

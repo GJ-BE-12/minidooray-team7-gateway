@@ -1,10 +1,11 @@
 package com.nhnacademy.spring_boot_jpa.dto.project;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-// 프로젝트 생성을 위한 DTO
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class ProjectCreateRequest {
     private String projectName;

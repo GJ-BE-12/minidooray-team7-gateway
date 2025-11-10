@@ -88,7 +88,7 @@ public class TaskController {
         // TaskDetailsResponse -> TaskUpdateRequest 변환
         TaskUpdateRequest request = new TaskUpdateRequest();
         request.setTitle(task.getTitle());
-        request.setContent(task.getContent());
+        request.setBody(task.getBody());
         if (task.getMilestone() != null) {
             request.setMilestoneId(task.getMilestone().getMilestoneId());
         }
@@ -102,11 +102,11 @@ public class TaskController {
         model.addAttribute("tags", tagService.getTags(user.getUserId(), projectId));
         model.addAttribute("milestones", milestoneService.getMilestones(user.getUserId(), projectId));
 
-        return "taskUpdateForm"; // 템플릿 (4번 항목 참고)
+        return "taskUpdateForm";
     }
 
-    // URL: GET /projects/{projectId}/tasks/{taskId}/update
-    @PostMapping("/{taskId}/update")
+    // URL: PUT /projects/{projectId}/tasks/{taskId}
+    @PutMapping("/{taskId}")
     public String updateTask(@PathVariable Long projectId,
                              @PathVariable Long taskId,
                              @ModelAttribute TaskUpdateRequest request,
@@ -120,8 +120,8 @@ public class TaskController {
         }
     }
 
-    // URL: GET /projects/{projectId}/tasks/{taskId}/delete
-    @PostMapping("/{taskId}/delete")
+    // URL: DELETE /projects/{projectId}/tasks/{taskId}
+    @DeleteMapping("/{taskId}")
     public String deleteTask(@PathVariable Long projectId,
                              @PathVariable Long taskId,
                              @AuthenticationPrincipal UserPrincipal user) {

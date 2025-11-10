@@ -1,15 +1,17 @@
 package com.nhnacademy.spring_boot_jpa.dto.task;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.util.List;
 
-// 태스크 수정을 위한 DTO
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class TaskUpdateRequest {
     private String title;
-    private String content;
+    private String body;
     private Long milestoneId;
     private List<Long> tagIds;
 }

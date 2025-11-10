@@ -1,10 +1,11 @@
 package com.nhnacademy.spring_boot_jpa.dto.comment;
 
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-// Task-Api로 댓글 생성을 요청하기 위한 DTO
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class CommentCreateRequest {
     private String content;
