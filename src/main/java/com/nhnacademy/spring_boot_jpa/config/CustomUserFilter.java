@@ -73,6 +73,9 @@ public class CustomUserFilter extends OncePerRequestFilter {
                     // ✅ SecurityContext에 등록
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
+                    // ✅ 세션에 UserResponse를 JSON 문자열로 저장 (사용자 정보 쉽게 접근)
+                    request.getSession().setAttribute("loggedInUserJson", objectMapper.writeValueAsString(userResponse));
+
                     // ✅ 세션에도 SecurityContext 저장 (로그인 유지)
                     request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 
