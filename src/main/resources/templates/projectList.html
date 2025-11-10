@@ -27,7 +27,7 @@
     <div class="header">
         <h1>프로젝트 목록</h1>
 
-        <form th:action="@{/logout}" method="post">
+        <form th:action="@{users/login}" method="post">
             <span style="margin-right: 1rem;" sec:authentication="name"></span>님
             <button type="submit">로그아웃</button>
         </form>
