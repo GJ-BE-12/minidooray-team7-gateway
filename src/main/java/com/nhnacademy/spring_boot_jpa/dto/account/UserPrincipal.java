@@ -26,16 +26,4 @@ public class UserPrincipal extends User implements Serializable{
         this.email = email;
     }
 
-    public String getUserId() {
-        return userId;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
 }

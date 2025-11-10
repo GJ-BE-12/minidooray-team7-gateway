@@ -1,7 +1,9 @@
 package com.nhnacademy.spring_boot_jpa.service;
 
+import com.nhnacademy.spring_boot_jpa.dto.account.LoginRequest;
 import com.nhnacademy.spring_boot_jpa.dto.account.RegisterRequest;
 import com.nhnacademy.spring_boot_jpa.dto.UserAuthResponse;
+import com.nhnacademy.spring_boot_jpa.dto.account.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,6 +62,30 @@ public class AccountApiClient {
         } catch (RestClientException e) {
             log.error("Failed to register user via Account API", e);
             throw new RuntimeException("Registration failed (API Error)", e);
+        }
+    }
+
+    //로그인 시도
+    public UserResponse login(LoginRequest loginRequest) {
+        String url = this.accountApiUrl + "/users/login"; // Account API의 로그인 엔드포인트
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<LoginRequest> requestEntity = new HttpEntity<>(loginRequest, headers);
+
+        try {
+            // Account API가 로그인 성공 시 UserResponse 객체를 반환
+            ResponseEntity<UserResponse> response = restTemplate.postForEntity(url, requestEntity, UserResponse.class);
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                return response.getBody(); // 로그인 성공 시 UserResponse 객체 반환
+            } else {
+                throw new RuntimeException("Login failed: " + response.getStatusCode());
+            }
+        } catch (RestClientException e) {
+            log.error("Failed to login user via Account API", e);
+            throw new RuntimeException("Login failed (API Error)", e);
         }
     }
 }

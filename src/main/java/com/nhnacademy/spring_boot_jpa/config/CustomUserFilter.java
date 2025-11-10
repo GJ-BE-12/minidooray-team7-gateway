@@ -40,12 +40,12 @@ public class CustomUserFilter extends OncePerRequestFilter {
 
         // 로그인 요청만 가로채기
         if ("/users/login".equals(request.getServletPath()) && "POST".equalsIgnoreCase(request.getMethod())) {
-            String username = request.getParameter("username");
+            String userId = request.getParameter("userId");
             String password = request.getParameter("password");
 
-            LoginRequest loginRequest = new LoginRequest(username, password);
+            LoginRequest loginRequest = new LoginRequest(userId, password);
 
-            log.info("🔐 Login attempt: username={}, password={}", username, password);
+            log.info("🔐 Login attempt: userId={}, password={}", userId, password);
 
             try {
                 // ✅ Account API에 로그인 요청

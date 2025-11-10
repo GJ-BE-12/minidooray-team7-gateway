@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 //@Entity
 public class Users {
 //    @Id
-    private String user_id;
+    private String userId;
     private String password;
-    private String user_name;
+    private String username;
     private String email;
     private LocalDateTime created_at;
 
